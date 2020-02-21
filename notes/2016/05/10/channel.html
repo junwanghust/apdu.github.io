@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>逻辑通道 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/05/10/channel.html" title="逻辑通道">逻辑通道</a></h1>
+	<p class="entry-date">2016-05-10</p>
+	<p>7816/GP规范对APDU指令的Class Byte有如下规定:</p>
+<blockquote>
+  <p>bits b1 and b2 set to 00 indicates receipt of the command on the Basic Logical Channel, eg: 00A4040000;<br />
+bits b1 and b2 set to 01, 10 or 11 indicates receipt of the command on a Supplementary Logical Channel, eg: 01A4040000;<br />
+bit b7 set to 1 indicates in bits b4 to b1 (values 0000 to 1111) receipt of the command on Supplementary Logical Channel, eg: 41A4040000.</p>
+</blockquote>
+
+<p>通常我们所见的指令都是在基本逻辑通道上发送的，而在辅助逻辑通道上的指令似乎很少见,辅助逻辑通道什么时候会用到呢？<br />
+答案很简单，通常下载应用时我们会使用辅助逻辑通道。</p>
+
+<p>我来解释一下：我去年申请了一张移动NFC-SIM，有一天我正在等5路公交，为了打发时间，我通过和包客户端申请了一张信用卡，此时银行审批通过，并且通过TSM平台推送应用进行下载，领导恰巧发来短信问我几点到公司，领导的短信一定要及时回，
+同时TSM客户端也在下载PBOC应用。如果短信是存储在SIM卡上，操作短信、下载应用势必会同时访问SIM卡。对短信的操作是在基本通道上进行的，如果下载也是在基本通道上进行，那么这两者势必会冲突。
+为了解决冲突问题，只要在辅助逻辑通道上下载应用就可以了，不同逻辑通道间不会相互应用。逻辑通道就是为了解决这个问题而生的。</p>
+
+<p>逻辑通道也可以理解成多个管道，一个管道运输井水，一个运输河水，这样井水就不犯河水。管道可以只运河水，也可以只云井水，通过不同的管道也可以同时运井水与河水。</p>
+
+<p><a href="https://github.com/APDU/iAPDU/blob/master/apdu%20current/logicalload.md">通过辅助逻辑通道下载应用的示例APDU</a></p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

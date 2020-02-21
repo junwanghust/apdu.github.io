@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>qPBOC tag57与tag5F34注意事项 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2017/04/24/tag57tag5F34.html" title="qPBOC tag57与tag5F34注意事项">qPBOC tag57与tag5F34注意事项</a></h1>
+	<p class="entry-date">2017-04-24</p>
+	<h5 id="tag57">tag57</h5>
+
+<p>2磁道等价数据,注意是等价,效力与2磁道数据是一样的但并不等于这就是2磁道数据;除非作为待签名的静态数据一部分,2磁道等价数据必需在GPO中返回.
+规范明确要求tag57若未参与fDDA则须在GPO中返回,否则需要的AFL对应的记录中返回.</p>
+
+<h5 id="tag5f34">tag5F34</h5>
+
+<p>应用主账号(PAN)序列号,通常参与分散卡片子密钥.  规范要求若卡片中出现就需要在GPO中返回.
+这里有一点需要注意的是某些银行也会要求tag5F34参与fDDA,那么此时GPO中就不应返回tag5F34.这一点跟tag57一样.</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

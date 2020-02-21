@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>Linux笔记：vi/vim | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2019/01/15/linuxnote04.html" title="Linux笔记：vi/vim">Linux笔记：vi/vim</a></h1>
+	<p class="entry-date">2019-01-15</p>
+	<h3 id="1-vi与vim">1. vi与vim</h3>
+
+<p>vi是Unix及Linux系统下标准的编辑器。</p>
+
+<p>vim是一个类似于vi的文本编辑器，在vi的基础上改进和增加了很多特性：代码补全、编译及错误跳转等。</p>
+
+<p>文件.exrc是配置文件，位于/home/username目录下，记作$HOME/.exrc，每用户一份，用户独立设置，vi/vim启动时会读取该文件。</p>
+
+<p>在vi/vim中使用set命令:</p>
+<blockquote>
+  <p>:set 查看当前配置<br />
+:set all 列出所有配置项<br />
+:set number  显示行号<br />
+:set nonumber  不显示行号</p>
+</blockquote>
+
+<p>注意：在vi/vim中使用set命令，在退出vi/vim后失效。</p>
+
+<h3 id="2-状态">2. 状态</h3>
+
+<p>vi/vim有两种状态：命令状态与输入状态，这两种状态可以相互切换。</p>
+
+<h5 id="21-命令状态">2.1 命令状态</h5>
+
+<p>在命令状态下，合法的键盘输入解释为命令，一般按键无显示，vi/vim一启动就进入命令方式。</p>
+
+<p>命令状态下输入冒号可以引入行编辑的命令和查找命令。</p>
+
+<p>命令状态下输入i、a、o、O，可以从命令状态转到输入状态。</p>
+
+<h5 id="22-输入状态">2.2 输入状态</h5>
+
+<p>在输入状态，键盘输入解释为输入的文本，可以从键盘输入文本信息到文件中。</p>
+
+<p>输入状态下按键盘左上角的Esc键，返回到命令状态。</p>
+
+<h3 id="3-命令">3. 命令</h3>
+
+<h5 id="31-插入命令">3.1 插入命令</h5>
+
+<blockquote>
+  <p>i 在当前字符前插入文本<br />
+a 在当前字符后插入文本 <br />
+o 在当前行之下添加新行并进入输入状态<br />
+O 在当前行之上添加新行并进入输入状态</p>
+</blockquote>
+
+<h5 id="32-单字符移动">3.2 单字符移动</h5>
+
+<blockquote>
+  <p>h 光标左移一列 <br />
+j 光标下移一行<br />
+k 光标上移一行<br />
+l 光标右移一列</p>
+</blockquote>
+
+<p>可以在命令前加一整数，表示这个命令连续执行多少遍，例如5h 光标左移5列。</p>
+
+<h5 id="33-翻页">3.3 翻页</h5>
+
+<blockquote>
+  <p>Ctrl-b 向后翻页<br />
+Ctrl-f 向前翻页</p>
+</blockquote>
+
+<p>一般可以用PgDn键代替Ctrl-f，用PgUp键代替Ctrl-b，同样也可以在命令前加整数。</p>
+
+<h5 id="34-快速移动">3.4 快速移动</h5>
+
+<blockquote>
+  <p>^ 将光标移至当前行首 <br />
+$ 将光标移至当前行尾<br />
+w 移到右一个单词 <br />
+b 移到左一个单词</p>
+</blockquote>
+
+<p>同样也可以使用6w、5b等命令。</p>
+
+<blockquote>
+  <p>:6 将光标定位于第6行  <br />
+:1 将光标定位于第1行，不支持使用^命令移动到首行  <br />
+:$ 将光标定位于文件尾  <br />
+:$-10 将光标移动到倒数第10行 <br />
+% 把光标移到一个花括号(或圆括号，或方括号)上，按%键，则光标自动定位到与它配对的那一个括号</p>
+</blockquote>
+
+<h5 id="35-书签">3.5 书签</h5>
+
+<p>vi/vim允许设置以单个英文字母命名的最多26个标记(mark)，许多编辑器把这种功能叫书签(bookmark)，书签记忆了一个行号。</p>
+
+<p>设置书签的命令是m，例如：按下按键ma，尽管终端上没什么特别的显示信息，但是已经将当前行号记为名字为a的书签；
+将光标移动到指定书签处的命令是’(单引号) 例如:’a，连续按下单引号和字母a，光标会移动到书签a处。</p>
+
+<h5 id="36-删除">3.6 删除</h5>
+
+<blockquote>
+  <p>x 删除字符<br />
+dd 删除行<br />
+d’e 从当前光标删除到书签e<br />
+d$ 从当前光标删除到行尾<br />
+d^ 从当前光标删除到行首<br />
+dw 删除一个单词
+d% 将光标移动到括号上，删除与它配对的括号中的内容</p>
+</blockquote>
+
+<p>同样也可以使用6x、7dd命令。</p>
+
+<h5 id="37-替换">3.7 替换</h5>
+
+<blockquote>
+  <p>r 替换光标处字符<br />
+ra 命令将当前光标处字符替换为a，替换完成后仍然处于命令状态<br />
+R 替换多个字符，输入R后，进入替换状态，直到按下Esc <br />
+Rabc 将当前光标处开始的三个字符依次替换为abc</p>
+</blockquote>
+
+<h5 id="38-撤销重复">3.8 撤销、重复</h5>
+
+<blockquote>
+  <p>u 撤销上一次操作，可以多次使用<br />
+. 圆点键，可以重复上一次的编辑操作，例如：按dd命令删除了1行，然后按圆点键就再删除1行</p>
+</blockquote>
+
+<h5 id="39-文件命令">3.9 文件命令</h5>
+
+<blockquote>
+  <p>ZZ 保存文件并退出 <br />
+:wq 保存文件并退出  <br />
+:w 保存文件不退出  <br />
+:q! 不保存文件退出<br />
+:r t.txt 将t.txt文件中的内容插入到当前行下<br />
+:50,$ w file 将50行到文件尾的内容写到file文件中<br />
+:50,$ w! file 将50行到文件尾的内容强制覆盖掉(如果file存在)<br />
+:w file 将当前文件存到file中，适用于编辑了文件但没有权限存盘的情况下等</p>
+</blockquote>
+
+<h5 id="310-段落的复制删除与移动">3.10 段落的复制、删除与移动</h5>
+
+<blockquote>
+  <p>:10,50 d 删除第10-50行<br />
+:1,. d 删除1-当前行的部分<br />
+:.,$ d 删除当前行-文件尾部分<br />
+:10,50 y 复制(yank)10-50行<br />
+:5,10 co 56 复制5-10行到56行下<br />
+:8,10 m 12 将8-10行移动到12行下  <br />
+:’e,. d 删除书签e到当前行</p>
+</blockquote>
+
+<p>行号描述时可以使用圆点代表当前行，$代表最后一行，还可以使用书签。</p>
+
+<h5 id="311-剪贴板">3.11 剪贴板</h5>
+
+<p>vi/vim有一个通用的缓冲区和用单个字母命名的26个缓冲区，用于保留一些文本，前面介绍的删除命令，都会保留一份信息到缓冲区中。</p>
+
+<p>除了删除命令之外，还有复制(yank)命令y，也会将指定信息复制到缓冲区，但不删除原信息。</p>
+
+<blockquote>
+  <p>yy 复制当前行<br />
+3yy 复制当前开始的3行<br />
+y’e 从当前光标处复制到书签e<br />
+y$ 从当前光标处复制到行尾<br />
+y^ 从当前光标处复制到首行<br />
+yw 复制一个单词<br />
+y% 先将当前光标定位到一个括号上，复制与这个括号匹配的括号中的内容<br />
+:1,. y 复制1-当前行</p>
+</blockquote>
+
+<blockquote>
+  <p>p 将缓冲区的内容复制到指定位置</p>
+</blockquote>
+
+<p>使用单个英文字母命名的缓冲区时，需要在命令前加两个前缀，一个是双引号，一个是英文字母，这个字母代表缓冲区的名字。</p>
+
+<blockquote>
+  <p>“a3dd 删除当前开始的3行，并把信息保留缓冲区a<br />
+“by’e 拷贝当前光标到书签e处的内容到缓冲区b<br />
+“cy% 将光标定位到一个括号字符，并将与它匹配的括号内的信息复制到缓冲区c<br />
+“ap  粘贴缓冲区a中的内容到光标位置</p>
+</blockquote>
+
+<h5 id="312-其它命令">3.12 其它命令</h5>
+
+<blockquote>
+  <p>J 两行合并(Join)，当前行下面的行合并到当前行的末尾<br />
+Ctrl-l 刷新屏幕显示(load)<br />
+Ctrl-g 状态显示</p>
+</blockquote>
+
+<p>当正在编辑一个文件时，由于其他用户给本终端发送的信息显示到屏幕上，或者某一后台进程的输出冲掉了当前的显示，
+在阅读完这些突然的信息后，按Ctrl-l恢复原来的显示，在more命令中也有类似功能。</p>
+
+<h5 id="313-模式查找">3.13 模式查找</h5>
+
+<p>在vi/vim的模式查找命令中，用正则表达式来描述一个字符串模式，格式：</p>
+<blockquote>
+  <p>/pattern</p>
+</blockquote>
+
+<p>例： /[0-9][0-9]* 从当前光标的位置开始查找，找到后将光标定位到该处。</p>
+
+<p>继续查找命令：n和N，n为向下查找下一个，N为向上查找下一个。</p>
+
+<h5 id="314-模式替换">3.14 模式替换</h5>
+
+<p>在vi/vim的模式替换命令中，也使用正则表达式来描述一个字符串模式，格式为：</p>
+<blockquote>
+  <p>:num1,num2 s/pattern/string/g</p>
+</blockquote>
+
+<p>其中num1，num2为行号，s是substitution。</p>
+
+<p>注意：当pattern或string中出现/时，可以使用\来取消转义，或者用:、^、%、$等代替/。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:1,50 s/abc/xyz/    //将1-50行的abc替换成xyz，并且只匹配每行的首个abc
+:1,10 s/^/    /     //将行首增加4个空格，即1-10行右移四列
+:1,10 s/^    //     //将行首的4个空格替换成空，及1-10行左移四列
+:1,$ s/ *$//        //消除尾部多余的空格
+:1,$ s/1\/1000/1\/1024/g  //将1/1000替换为1/1024
+:1,$ s:1/1000:1/1024:g    //同上
+</code></pre></div></div>
+
+<p>注意：在模式描述中增加(和)不影响匹配操作，使用时括号前要加\，增加(与)目的在于方便替换字符串中使用，在替换字符串中使用\1就代表正则表达式中第一个(与)所匹配的部分，\2以此类推…。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:1,$s/\([a-zA-Z_][a-zA-Z0-9_]*\)-&gt;number/\1-&gt;num/g     //可以将a-&gt;number替换为a-&gt;num
+</code></pre></div></div>
+
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

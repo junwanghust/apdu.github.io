@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>安全单元Secure Element | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/03/08/se.html" title="安全单元Secure Element">安全单元Secure Element</a></h1>
+	<p class="entry-date">2016-03-08</p>
+	<p>安全单元是存储应用、密钥等敏感数据的载体，对于支付等安全性要求较高的产品必备可少，SE可以保证交易及重要数据的安全。</p>
+
+<p>SE大概可分为以下几种:</p>
+
+<ol>
+  <li>eSE</li>
+  <li>SE-SIM</li>
+  <li>SE-SD</li>
+</ol>
+
+<h5 id="ese">eSE</h5>
+
+<p>eSE的e是嵌入式的意思，手机、手环等硬件厂商主推的移动支付，在手机主板上集成一个SE模块，通过NFC来通信，Samsung Pay等均采用了eSE方案。通常搭配Token、生物识别技术来提升安全。</p>
+
+<h5 id="se-sim">SE-SIM</h5>
+
+<p>运营商主推的移动支付，SIM卡中包含一个SE模块，SE-SIM又可细分为SWP-SIM及全卡SIM。</p>
+
+<p>全卡SIM方案由于内置了天线可不使用NFC，但受限于天线导致刷卡效果差、而且成本高。</p>
+
+<p>SWP-SIM需另外增加SIM卡与NFC芯片间的SWP接口。</p>
+
+<h5 id="se-sd">SE-SD</h5>
+
+<p>曾经为银行主推的移动支付，在SD存储卡中添加一个SE。SE-SD也可细分为SWP-SD及全卡SD，这种移动支付方式较为少见，而且存在明显的缺陷，SD的写接口不稳定，易造成通讯中断。</p>
+
+<p>全卡SD方案由于内置了天线可不使用NFC，但受限于天线导致刷卡效果差。</p>
+
+<p>SWP-SD需另外增加SD卡与NFC芯片间的SWP接口。</p>
+
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

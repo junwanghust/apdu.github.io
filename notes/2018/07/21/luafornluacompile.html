@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>Lua5.3 for NLua Compile | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2018/07/21/luafornluacompile.html" title="Lua5.3 for NLua Compile">Lua5.3 for NLua Compile</a></h1>
+	<p class="entry-date">2018-07-21</p>
+	<p>NLua是基于Lua的C#脚本引擎，不过至今仍是基于5.2版本的Lua。</p>
+
+<p>Lua5.3加入对整数支持，支持位操作运算，还提供了UTF-8库。但NLua的Lua库两年都没更新了，本着折腾的精神升级Lua到最新版(不需要改动Nlua/KeraLua)。</p>
+
+<p>如果嫌麻烦，可以略过本文直接去GitHub下载完整的工程及dll，<a href="https://github.com/APDU/lua/releases">lua5.3.5_Win32</a>。</p>
+
+<h4 id="1-源码准备">1. 源码准备</h4>
+
+<h5 id="11-lualnet源码下载">1.1 Lua&amp;Lnet源码下载</h5>
+
+<p>先去官网下载源码，本文以5.3.5版本为例，<a href="https://www.lua.org/download.html">Lua download</a>。</p>
+
+<p>lnet需要去NLua项目中下载，只需要lnet.h和lnet.cpp即可，将这俩文件加入到lua源码中，<a href="https://github.com/NLua/lua">lnet download</a>。</p>
+
+<h5 id="12-lua源码修改">1.2 Lua源码修改</h5>
+
+<ol>
+  <li>将luac.c &amp; lua.c删除(文件中各含有main方法)，c文件中的#include “lprefix.h”亦可删除；</li>
+  <li>将c文件后缀改为cpp；</li>
+  <li>Lua5.3删除了lua_remove函数，而NLua又用到了这个函数，故新增lua_remove函数；</li>
+  <li>lua_sethook函数返回值类型改为int；</li>
+  <li>修改luaconf.h导出函数以匹配NLua dll函数导入。</li>
+</ol>
+
+<p>以下为修改步骤3、4、5的修改内容：</p>
+
+<p>lua.h 加入lua_remove的声明，并屏蔽掉原有的lua_remove的宏定义</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//#define lua_remove(L,idx)	(lua_rotate(L, (idx), -1), lua_pop(L, 1))
+LUA_API void lua_remove (lua_State *L, int idx);
+</code></pre></div></div>
+
+<p>lapi.cpp 增加lua_remove函数</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LUA_API void lua_remove (lua_State *L, int idx) {
+	lua_rotate(L, (idx), -1);
+	lua_settop(L, -2);
+}
+</code></pre></div></div>
+
+<p>lua.h lua_sethook函数返回值类型改为int</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LUA_API int (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
+</code></pre></div></div>
+
+<p>ldebug.cpp lua_sethook函数返回值类型改为int</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LUA_API int lua_sethook (lua_State *L, lua_Hook func, int mask, int count) {
+  if (func == NULL || mask == 0) {  /* turn off hooks? */
+    mask = 0;
+    func = NULL;
+  }
+  if (isLua(L-&gt;ci))
+    L-&gt;oldpc = L-&gt;ci-&gt;u.l.savedpc;
+  L-&gt;hook = func;
+  L-&gt;basehookcount = count;
+  resethookcount(L);
+  L-&gt;hookmask = cast_byte(mask);
+  return 1;
+}
+</code></pre></div></div>
+
+<p>luaconf.h导出函数改为</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef __cplusplus
+#if defined(LUA_BUILD_AS_DLL)
+#if defined(LUA_CORE) || defined(LUA_LIB)
+#define LUA_API extern "C" __declspec(dllexport)
+#else
+#define LUA_API extern "C" __declspec(dllimport)
+#endif
+#else
+#define LUA_API		extern "C"
+#endif
+#else
+#if defined(LUA_BUILD_AS_DLL)
+#if defined(LUA_CORE) || defined(LUA_LIB)
+#define LUA_API __declspec(dllexport)
+#else
+#define LUA_API __declspec(dllimport)
+#endif
+#else
+#define LUA_API		extern
+#endif
+#endif
+</code></pre></div></div>
+
+<h4 id="2-工程及配置">2. 工程及配置</h4>
+
+<p>以Visual Studio2010为例:</p>
+
+<ol>
+  <li>
+    <p>文件 -&gt; 新建 -&gt; 项目，模板选择Visual C++空项目，输入项目名称等；</p>
+  </li>
+  <li>
+    <dl>
+      <dt>右键项目选择属性，进入配置项(步骤d可选)：</dt>
+      <dd>a. 配置属性 -&gt; 常规，项目默认值 -&gt; 配置类型，将类型改为“动态库(.dll)”；</dd>
+      <dd>b. 配置属性 -&gt; C/C++ -&gt; 常规，在 附加包含目录，增加以下内容或者头文件的路径；
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> $(ProjectDir)\include;
+</code></pre></div>        </div>
+      </dd>
+      <dd>c. 配置属性 -&gt; C/C++ -&gt; 预处理器，选择 预处理器定义，增加以下内容；
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ;LUA_BUILD_AS_DLL;LUA_LIB;
+</code></pre></div>        </div>
+      </dd>
+      <dd>d. 配置属性 -&gt; C/C++ -&gt; 代码生成，选择 运行库，内容设置为多线程 (/MT)，这样可不用依赖msvcp100.dll、msvcr100d.dll。</dd>
+    </dl>
+  </li>
+</ol>
+
+<p>另外还可以添加资源文件(.rc)，加入版本信息等个性化信息。</p>
+
+<h4 id="3-编译">3. 编译</h4>
+
+<p>编译即可。</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

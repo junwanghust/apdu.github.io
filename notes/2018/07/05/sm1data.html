@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>SM1算法标准数据 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2018/07/05/sm1data.html" title="SM1算法标准数据">SM1算法标准数据</a></h1>
+	<p class="entry-date">2018-07-05</p>
+	<p>以下为SM1算法的加解密数据，其中EK为主密钥，AK为辅助密钥。</p>
+
+<h2 id="1-sm1-ecb-mode">1. SM1 ECB Mode：</h2>
+
+<h5 id="group1">Group1</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>SM1 ECB</th>
+      <th>HEX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Plain</td>
+      <td>7BB129DE65169711BA5BB8D00B947076</td>
+    </tr>
+    <tr>
+      <td>EK</td>
+      <td>13948AE3F3793DB420246F389ADF328C</td>
+    </tr>
+    <tr>
+      <td>AK</td>
+      <td>00000000000000000000000000000000</td>
+    </tr>
+    <tr>
+      <td>08 Rounds Cipher</td>
+      <td>DC193C74822A5EBB718C4E1DFA1B2798</td>
+    </tr>
+    <tr>
+      <td>10 Rounds Cipher</td>
+      <td>3417FCDFB5B61DFFB0549602BAA35288</td>
+    </tr>
+    <tr>
+      <td>12 Rounds Cipher</td>
+      <td>BE737C7A37DB8E7BE8BB640A6CBA135B</td>
+    </tr>
+    <tr>
+      <td>14 Rounds Cipher</td>
+      <td>E9105166320B3E0D0D48C15633509FF7</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="group2">Group2</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>SM1 ECB</th>
+      <th>HEX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Plain</td>
+      <td>7292A92BBD648E9E0EED69879CDD910A44A3E73F5AD099E10312827D6FA35789</td>
+    </tr>
+    <tr>
+      <td>EK</td>
+      <td>277F596F4E4C0BC64F31096C4280E84D</td>
+    </tr>
+    <tr>
+      <td>AK</td>
+      <td>00000000000000000000000000000000</td>
+    </tr>
+    <tr>
+      <td>08 Rounds Cipher</td>
+      <td>6F03F80CBFB3F8A3FDD081BE844A1299DD1F12E771BD821B37CC025CA78BC443</td>
+    </tr>
+    <tr>
+      <td>10 Rounds Cipher</td>
+      <td>2B535B16AD5D68FB149ED03EE8D06F630BAA838A80C95845A27433BFDCD8771B</td>
+    </tr>
+    <tr>
+      <td>12 Rounds Cipher</td>
+      <td>5F8C0178614297D829E73AFF9D81754D3584B8CDC3ABAAB1D9E1880D350B8A3B</td>
+    </tr>
+    <tr>
+      <td>14 Rounds Cipher</td>
+      <td>90FD681CE6CE93EB670900335A9281F24186AB4E6A18444FF2DAD1DBFB12833B</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="group3">Group3</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>SM1 ECB</th>
+      <th>HEX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Plain</td>
+      <td>133DAFEF722CCCE852E540E118AAA54D</td>
+    </tr>
+    <tr>
+      <td>EK</td>
+      <td>FD37DBD4DC7C7760DEBFD20E6600E06D</td>
+    </tr>
+    <tr>
+      <td>AK</td>
+      <td>2BF84854B2E4ADAA70B396C83B96DDD2</td>
+    </tr>
+    <tr>
+      <td>08 Rounds Cipher</td>
+      <td>EB73766C4A57701564A943568368610D</td>
+    </tr>
+    <tr>
+      <td>10 Rounds Cipher</td>
+      <td>686282F11394BD9A288406988CBB4C70</td>
+    </tr>
+    <tr>
+      <td>12 Rounds Cipher</td>
+      <td>D356941CF71BD4B4ED6EA8F920E68816</td>
+    </tr>
+    <tr>
+      <td>14 Rounds Cipher</td>
+      <td>4BE78B25BBCC1672A186E04C52B5FA12</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="group4">Group4</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>SM1 ECB</th>
+      <th>HEX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Plain</td>
+      <td>6F8FB192E0525D6BAE39418486D035D0A5D145E27CED2FC9DB87C39B3AE037A1</td>
+    </tr>
+    <tr>
+      <td>EK</td>
+      <td>E9B8905FD847DCF2F74876B37FAED1CA</td>
+    </tr>
+    <tr>
+      <td>AK</td>
+      <td>D14CC50205A5AD9B1692290F69FEA94A</td>
+    </tr>
+    <tr>
+      <td>08 Rounds Cipher</td>
+      <td>9FB28769E52CEA2592C0F6DAF8F8D106D43D615836D14B53FA80415E24817EBC</td>
+    </tr>
+    <tr>
+      <td>10 Rounds Cipher</td>
+      <td>44C31F704FC759D9FC20843FC87B2E4D13B5E6AD27E18D13C334F9BD6D8DB070</td>
+    </tr>
+    <tr>
+      <td>12 Rounds Cipher</td>
+      <td>537258384F3283F9174F8107F5D5BCFD2FEBA7D22C45E151BB4DF09EB6768B49</td>
+    </tr>
+    <tr>
+      <td>14 Rounds Cipher</td>
+      <td>B8610C875F292232E9943054E6B28BD8C1654306C46BEDB209535D009EAA0D71</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="2-sm1-cbc-mode">2. SM1 CBC Mode：</h2>
+
+<h5 id="group1-1">Group1</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>SM1 CBC</th>
+      <th>HEX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ICV</td>
+      <td>DE6193C719F86ECD1E0A24B9BE764733</td>
+    </tr>
+    <tr>
+      <td>Plain</td>
+      <td>A484BCE9D204BD40950C03C5E5EC5F750CDDFBD76CB5732CAC4A79B72E63CF5B</td>
+    </tr>
+    <tr>
+      <td>EK</td>
+      <td>634BC2AA7CA431CE47422432E827DD2D</td>
+    </tr>
+    <tr>
+      <td>AK</td>
+      <td>00000000000000000000000000000000</td>
+    </tr>
+    <tr>
+      <td>08 Rounds Cipher</td>
+      <td>757C95EE01F5C1EEF06F6016F71342C0F731C3C0177D3AC90069B104187E777E</td>
+    </tr>
+    <tr>
+      <td>10 Rounds Cipher</td>
+      <td>D64D687200CE30B806442DBCF138124E49C250C4ED0F434B2CE7008C796C106C</td>
+    </tr>
+    <tr>
+      <td>12 Rounds Cipher</td>
+      <td>756BE8ECBF127C0E0AB195CBEAA86F66829B8B38D8621ADCF0ED0FDBFE9887EB</td>
+    </tr>
+    <tr>
+      <td>14 Rounds Cipher</td>
+      <td>FB467ED064D814E591344E3623EF4EF60BCB3F8C051045C4B93F09CC6562DC7A</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="group2-1">Group2</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>SM1 CBC</th>
+      <th>HEX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ICV</td>
+      <td>EB31A8C689D1D7D8D439C6D0D887DDFA</td>
+    </tr>
+    <tr>
+      <td>Plain</td>
+      <td>D99AE3BFAC7858B89E8E27E8C6D5A29D8F166DC4D9BF44D24705E031295E6667</td>
+    </tr>
+    <tr>
+      <td>EK</td>
+      <td>36AEEEE1AD2B76B076577ED353A84E16</td>
+    </tr>
+    <tr>
+      <td>AK</td>
+      <td>16C2FBB21556AA4523DFF59E98646AA3</td>
+    </tr>
+    <tr>
+      <td>08 Rounds Cipher</td>
+      <td>BE8E8CC65A105FECD979D49F51B88F9FFCE94792352CA5A9851BFD8D2E781BF3</td>
+    </tr>
+    <tr>
+      <td>10 Rounds Cipher</td>
+      <td>A5A812A4FF79794897342C6088B53F8213EBF682B9E3CB0684FB288610FE62BF</td>
+    </tr>
+    <tr>
+      <td>12 Rounds Cipher</td>
+      <td>70EA0808877C415F1293D11D783E9AF53708F0AB4DD0F114D9DA619DAF4B675D</td>
+    </tr>
+    <tr>
+      <td>14 Rounds Cipher</td>
+      <td>65BAD06B0C10193F945C3D9DB53FB1C0A422BDB014A2C71F7DF1159281CE0B33</td>
+    </tr>
+  </tbody>
+</table>
+
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

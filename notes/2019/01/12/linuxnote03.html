@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>Linux笔记：正则表达式及命令 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2019/01/12/linuxnote03.html" title="Linux笔记：正则表达式及命令">Linux笔记：正则表达式及命令</a></h1>
+	<p class="entry-date">2019-01-12</p>
+	<h3 id="1-概念">1. 概念</h3>
+
+<p>正则表达式，又称规则表达式(Regular Expression)。
+正则表达式通常被用来匹配、替换那些符合某个模式(规则)的文本。</p>
+
+<p>注意：不同软件对正则表达式的定义会有差异。</p>
+
+<h3 id="2-正则表达式">2. 正则表达式</h3>
+
+<p>单字符正则表达式有特殊字符、普通字符、转移字符、圆点、集合。</p>
+
+<p>复杂的正则表达式是由单字符表达式组成的。</p>
+
+<h5 id="21-特殊字符">2.1 特殊字符</h5>
+
+<p>正则表达式有6个特殊字符：<strong>. ∗ [ \ ^ $</strong> 。</p>
+
+<h5 id="22-普通字符">2.2 普通字符</h5>
+
+<p>除了1.3.1章节列出的6个特殊字符外，其他字符与自身匹配，例如Q与Q匹配，s与w不匹配，?与!不匹配。</p>
+
+<h5 id="23-转义字符">2.3 转义字符\</h5>
+
+<p>1.3.1章节列出的特殊字符前面缀以\，则失去特殊字符的含义，例如正则表达式\^与字符^匹配。</p>
+
+<h5 id="24-圆点">2.4 圆点.</h5>
+
+<p>圆点可以匹配任意单字符。</p>
+
+<h5 id="25-集合">2.5 集合</h5>
+
+<p>集合使用中括号[]表示。</p>
+
+<p>在左中括号与右中括号之间的字符为集合的内容，例如正则表达式[abcd]与a、b、c、d中的任一字符匹配。</p>
+
+<p>可以用减号’-‘定义一个区间，例如正则表达式[a-d]与a、b、c、d中的任一字符匹配、正则表达式[a-zA-Z0-9]则囊括了26个大小写字母及数字。</p>
+
+<p>用^表示补集，若^在开头，则表示与集合内字符之外的任意单字符匹配，例如正则表达式[^a-z]匹配任意非小写字符；
+若^不在开头，则代表其本身，例如正则表达式[a-z^]匹配小写字母及^。</p>
+
+<p>当集合内含有特殊字符时，代表他们自己(^在开头，$在末尾时除外)。例如正则表达式[^]与^匹配。</p>
+
+<h5 id="26-串结">2.6 串结</h5>
+
+<p>正则表达式abc是3个单字符正则表达式的串结，仅匹配字符串abc。</p>
+
+<p>正则表达式[A-Z].[0-9]是3个单字符正则表达式的串接，要求字符串的第一个字符是大写，第二个字符任意，第三个字符是数字。</p>
+
+<h5 id="27-星号">2.7 星号∗</h5>
+
+<p>单字符正则表达式后跟∗，则匹配此单字符正则表达式的任意次(含0次)的出现。例如正则表达式12∗4与字符1224、14、122224匹配，与1234不匹配；
+正则表达式[A-Z]∗[0-9]与字符2、A3、ABC6匹配。</p>
+
+<p>在Unix中使用时尤其要注意，任意两个字符之间都有一个空字符，单字符正则表达式出现∗也与空字符匹配。</p>
+
+<p>正则表达式a[i] ∗= ∗b[j] \∗ ∗c[k]匹配字符串a[i]=b[j]∗c[k]，容许等号和星号两侧有空格。</p>
+
+<h5 id="28-行尾">2.8 行尾$</h5>
+
+<p>正则表达式123$表示只有字符串行尾是123时才匹配。</p>
+
+<h5 id="29-行首">2.9 行首^</h5>
+
+<p>正则表达式^123表示只有字符串行首是123时才匹配。</p>
+
+<h3 id="3-扩展正则表达式">3. 扩展正则表达式</h3>
+
+<p>ERE：扩展的正则表达式(ERE)。 
+PCRE: Perl-compatible regular expression，Ubuntu查PCRE的语法:man pcrepattern。</p>
+
+<h5 id="31-分组">3.1 分组</h5>
+
+<p>分组用圆括号表示，例如正则表达式(xy)*∗可匹配空字符串、xy、xyxy等。</p>
+
+<h5 id="32-逻辑运算符或">3.2 逻辑运算符或</h5>
+
+<p>用|表示，例如正则表达式(black|white)与black或white匹配。</p>
+
+<h5 id="33-重复次数">3.3 重复次数</h5>
+
+<p>*号表示它左边的单字符正则表达式的0次或多次重复；<br />
++号表示1次或多次：[0-9]+ 匹配长度至少为1数字串；<br />
+?表示0次或一次：a? 匹配零个或一个a；<br />
+限定重复次数 \{m,n\}，例如：[1-9][0-9]\{6,8\} 表示7-9位数字，首位非0。</p>
+
+<h5 id="34-预定义的集合">3.4 预定义的集合</h5>
+
+<p>[[:xdigit:]] 表示十六进制数字：0-9，A-F；<br />
+\d 表示数字； <br />
+\D 表示非数字。</p>
+
+<h3 id="4-正则表达式的应用">4. 正则表达式的应用</h3>
+
+<p>本节主要介绍三个与正则表达式相关的处理命令：<br />
+grep/egrep/fgrep:在文件中查找字符串（筛选）；<br />
+sed：流编辑（加工）；<br />
+awk：逐行扫描进行文本处理的一门语言（筛选与加工）。</p>
+
+<h5 id="41-grepegrepfgrep">4.1 grep/egrep/fgrep</h5>
+
+<p>grep（Global regular expression print）语法：grep 模式 文件名列表。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ps -ef | grep ^zm       //查找用户zm相关的进程
+grep '[0-9]*' py.py     //查找数字出现的行，Ubuntu下测试通过。
+</code></pre></div></div>
+
+<p>egrep使用扩展正则表达式ERE描述模式，在指定模式方面比grep更灵活。</p>
+
+<p>fgrep快速搜索指定字符串，按字符串搜索而不是按模式搜索。</p>
+
+<p>grep选项:</p>
+<blockquote>
+  <p>-F, –fixed-strings(instead of regular expressions)   <br />
+-G, –basic-regexp<br />
+-E, –extended-regexp <br />
+-P, –perl-regexp</p>
+</blockquote>
+
+<p>grep/fgrep/egrep选项:</p>
+<blockquote>
+  <p>-n 显示时每行前面显示行号<br />
+-v 显示所有不包含模式的行<br />
+-i 字母比较时忽略字母的大小写</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grep -n main *.c                        //查找含有main的行，并打印行号
+grep -v [Dd]isable dev.stat&gt;dev.active  //取消文件中所有含有指定模式的行，生成新文件
+grep -i test test.log                   //查找文件中字符串test出现的行
+</code></pre></div></div>
+
+<h5 id="42-sed">4.2 sed</h5>
+
+<p>用法</p>
+<blockquote>
+  <p>sed ‘命令’ 文件名列表<br />
+sed –e ‘命令1’ –e ‘命令2’ –e ‘命令3’ 文件名列表 <br />
+sed -f 命令文件 文件名列表 (命令文件可包含若干个命令)</p>
+</blockquote>
+
+<p>常见命令：</p>
+<blockquote>
+  <p>s/regexp/replacement，对于符合regexp的字符使用replacement替换  <br />
+d，删除行<br />
+i\str，插入行，内容为str <br />
+c\str，替换行，内容为str<br />
+a\str，追加行，内容为str</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -e s/8\.8\.8\.8/google/g dns.log   //将dns.log中的8.8.8.8替换成google，g命令将每行所有符合的都替换
+sed -e 1d dns.log    //删除第一行
+sed -e 1,5d dns.log  //删除1-5行
+sed -e 3,$d dns.log  //删除3-尾行
+sed -e '1c\hello world' dns.log  //替换第一行为hello world
+sed -e '$a hello world' dns.log  //尾行追加hello world
+</code></pre></div></div>
+
+<p>正则表达式中的圆括号可以对字符进行分组，并保存匹配的文本。在正则表达式中圆括号仍然代表它自身，在正则表达式中出现的(和)不影响匹配操作。
+若要使用第一个圆括号内的字符则使用\1即可，以此类推。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9]*\)/\3.\1.\2/g  //04-26-1997替换为1997.04.26
+</code></pre></div></div>
+
+<h5 id="43-awk">4.3 awk</h5>
+
+<p>awk其名称得自于它的创始人Alfred Aho、Peter Weinberger和Brian Kernighan姓氏的首个字母。</p>
+
+<p>awk是一个强大的文本分析工具，awk命令把文件逐行的读入，以空格或制表符符将每行切片，切开的部分(称之为域)再进行各种分析处理。
+awk的很多地方的设计类似于C语言，它支持条件控制、循环控制、变量定义及函数等功能。</p>
+
+<p>awk用法：</p>
+<blockquote>
+  <p>awk ‘Program’ file-list<br />
+awk -f ProgramFile file-list</p>
+</blockquote>
+
+<p>当程序只有一行时用’Program’这种方法很方便，但要注意将Program用单引号括起来，以避免不必要的麻烦；当程序比较复杂时用文件的方式则更佳。</p>
+
+<p>Program的写法：</p>
+<blockquote>
+  <p>condition { action }  //对所有满足condition的行执行action</p>
+</blockquote>
+
+<p>描述condition时，有5种方法：</p>
+<ol>
+  <li>如果不指定任何条件，则对所有的行都执行action；</li>
+  <li>关系运算符：&gt;、&lt;、==、&gt;=、&lt;=、!=；</li>
+  <li>逻辑运算符：||、&amp;&amp;、!；</li>
+  <li>正则表达式的模式匹配：/regexpr/；</li>
+  <li>特殊的条件：BEGIN{act}开始处理所有文本行之前执行act、END{act}处理完所有文本行之后执行act。</li>
+</ol>
+
+<p>描述action时，简单方法如下：</p>
+<ol>
+  <li>自定义变量；</li>
+  <li>加减乘除等算术、逻辑运算符；</li>
+  <li>正则表达式匹配运算符：~、!~；</li>
+  <li>流程控制if、for；</li>
+  <li>print var1, var2, …；</li>
+  <li>printf(fomat, var, …)，用法与C语言类似。</li>
+</ol>
+
+<p>awk内置变量：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>变量</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NR</td>
+      <td>当前记录的记录号(行号)</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>$0</td>
+      <td>当前记录(行)</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>$1,$2,…</td>
+      <td>记录中的第1个域、第2个域…</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>FILENAME</td>
+      <td>当前文件名</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//打印test.txt的内容，并在开头结尾各加一个start/end of file.
+awk 'BEGIN{ print "start of file"}END{ print "end of file" }{print $0}' test.txt
+
+//只打印时间
+date | awk '{print $4}'
+
+//打印大于2的文件名
+ls -s | awk '$1 &gt; 2 { print $2 }'
+
+//打印zm用户的PID
+ ps -f | awk '$1 ~ /zm/ {print $2}'
+</code></pre></div></div>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

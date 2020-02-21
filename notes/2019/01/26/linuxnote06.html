@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>Linux笔记：文件与目录管理命令 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2019/01/26/linuxnote06.html" title="Linux笔记：文件与目录管理命令">Linux笔记：文件与目录管理命令</a></h1>
+	<p class="entry-date">2019-01-26</p>
+	<h3 id="1-列出文件与目录">1. 列出文件与目录</h3>
+
+<p>ls命令类似Windows中的DIR命令，可以列出目录下的的文件，ls命令可以跟0-n个参数:</p>
+
+<blockquote>
+  <p>当不带任何参数时，列出当前目录下所有的文件和目录；<br />
+当参数为文件时，列出文件的信息等；<br />
+当参数为目录时，列出目录下的所有文件。</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//列出当前目录下所有的test.开头的文件，及根目录下的文件
+zm@acer:~$ ls test.* /
+test.c  test.log  test.py  test.txt
+
+/:
+dev   init   media  proc   sbin  sys   var
+bin   etc    lib    mnt    root  snap  tmp
+boot  home   lib64  opt    run   srv   usr
+</code></pre></div></div>
+
+<h5 id="11-选项-fflag">1.1 选项-F(Flag)</h5>
+
+<blockquote>
+  <p>若列出的是目录，就在名字后面缀以斜线 /；<br />
+若列出的是可执行文件，就在名字后面缀以星号 *；<br />
+若列出的是符号连接文件，就在名字后面缀以符号 @；<br />
+若列出的是普通文件，则名字面后无任何标记。</p>
+</blockquote>
+
+<p>除了通过后缀来区分文件类型，还可以通过颜色来区分。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ ls -F /bin
+bash*                journalctl*     pwd*
+btrfs*               kbd_mode*       rbash@
+
+zm@acer:~$ ls -F /dev
+block/      ttyS110  ttyS138  ttyS165  ttyS2   ttyS47  ttyS74
+</code></pre></div></div>
+
+<h5 id="12-选项-llong-listing-format">1.2 选项-l(long listing format)</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ ls -l
+total 1692
+-rw-rw-rw- 1 zm zm      4 Jan 13 21:48  0.txt
+-rwxrwxrwx 1 zm zm 844736 Jan 15 21:14  a.out
+-rw-rw-rw- 1 zm zm     11 Jan 15 22:37  cpk.c
+</code></pre></div></div>
+
+<p>第1列：文件属性：</p>
+<blockquote>
+  <p>第1字符为文件类型：- 普通文件、d 目录文件(Dir)、b 块设备文件(Block)、c 字符设备文件(Char)、l 符号连接文件(Link)、p 命名管道文件(Pipe)；<br />
+第2-4字符: 文件所有者对文件的访问权限(r读权限，w写权限，x可执行权限)；<br />
+第5-7字符: 同组用户对文件的访问权限；<br />
+第8-10字符:其它用户对文件的访问权限。</p>
+</blockquote>
+
+<p>第2列：文件link数，涉及到此文件的目录项数。</p>
+
+<p>第3列，第4列：文件主的名字和组名。</p>
+
+<p>第5列：</p>
+<blockquote>
+  <p>普通磁盘文件：列出文件大小(字节数)； <br />
+目录：列出目录表大小，不是目录下文件长度和； <br />
+符号连接文件：列出符号连接文件自身的长度；<br />
+字符设备和块设备文件：列出主设备号和次设备号；<br />
+管道文件：列出管道内的数据长度。</p>
+</blockquote>
+
+<p>第6列：文件最后一次被修改的日期和时间。</p>
+
+<p>第7列：文件名，对于符号连接文件，附带列出符号连接文件的内容。</p>
+
+<h5 id="13-选项-hhuman-readable">1.3 选项-h(human-readable)</h5>
+
+<p>许多其他命令中也有类似选项，以便于人阅读的方式打印数值(例如：1K 234M 2G)。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ ls -lh
+total 1.7M
+-rw-rw-rw- 1 zm zm    4 Jan 13 21:48  0.txt
+-rwxrwxrwx 1 zm zm 825K Jan 15 21:14  a.out
+...
+</code></pre></div></div>
+
+<h5 id="14-选项-ddirectory">1.4 选项-d(directory)</h5>
+
+<p>当ls的参数是目录时，只列出目录的名字，不列目录下的内容。</p>
+
+<p>若当前目录结构如下图：</p>
+<div class="mermaid">
+graph TD
+	A(当前目录)  --&gt;B[abc]
+	A --&gt;C[abc.dir]
+	A --&gt;D[abc.txt]
+	C --&gt;E[f1]
+	C --&gt;F[f2]
+</div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//shell展开之后为ls abc abc.dir abc.txt
+zm@acer:~$ ls abc*
+abc  abc.txt
+
+abc.dir:
+f1  f2
+
+zm@acer:~$ ls -d abc*
+abc  abc.dir  abc.txt
+
+zm@acer:~$ ls *
+abc  abc.txt
+
+abc.dir:
+f1  f2
+
+zm@acer:~$ ls
+abc  abc.dir  abc.txt
+</code></pre></div></div>
+
+<p>在这里，ls与ls -d *的结果相同，而与ls *的结果不同。</p>
+
+<h5 id="15-选项-a与-aall">1.5 选项-a与-A(all)</h5>
+
+<p>-a，列出目录下所有的文件，包括文件名首字符为圆点的文件(默认情况下这些文件不列出，经常会用来保存用户的偏好设置信息或保存某些软件的状态信息)。</p>
+
+<p>-A，功能与-a相同，除了不列出.和..文件。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ ls -a
+ .               .mysql_history              sha1sum
+ ..              .profile                    test
+ .bash_history   .python_history             test.c
+ 
+zm@acer:~$ ls -A
+ .bash_history    .profile                    sha1sum
+ .bash_logout     .python_history             test 
+</code></pre></div></div>
+
+<h5 id="16-选项-ssize">1.6 选项-s(size)</h5>
+
+<p>列出文件占用的磁盘空间。</p>
+
+<h5 id="17-选项-ii-node">1.7 选项-i(i-node)</h5>
+
+<p>列出文件的i节点号。</p>
+
+<h5 id="18-选项-rrecursion">1.8 选项-R(Recursion)</h5>
+
+<p>递归的列出所有碰到的子目录，如果目录下还有子目录就列出目录下的文件。这一命令可能执行的时间较长。</p>
+
+<h3 id="2-文件管理">2. 文件管理</h3>
+
+<h5 id="21-文件创建">2.1 文件创建</h5>
+
+<p>文件创建可以使用vi/vim，如果对应的文件不存在，则新建。</p>
+
+<p>如果仅仅是需要一个空文件，则可以直接用touch命令。</p>
+
+<p>另外也可以使用cat &gt; file来创建命令，使用此命令输入完成后要按下Ctrl+d表示文件结束。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim test.py
+touch empty_file
+</code></pre></div></div>
+
+<h5 id="22-文件复制">2.2 文件复制</h5>
+
+<p>cp为文件复制命令，格式:</p>
+<blockquote>
+  <p>格式1: cp file1 file2<br />
+格式2: cp file1 file2 … dir</p>
+</blockquote>
+
+<p>格式1将file1复制到file2，若file2已经存在，则覆盖，否则新建file2；格式2将file1、file2…复制到目录dir下，dir一定要存在。</p>
+
+<p>若当前目录结构如下图：</p>
+<div class="mermaid">
+graph TD
+	A(当前目录)  --&gt;B[abc]
+	A --&gt;C[abc.dir]
+	C --&gt;E[f1]
+	C --&gt;F[f2]
+</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//f1覆盖f2
+cp abc.dir/f?
+
+//f1、f2复制到当前目录下
+cp abc.dir/f? .
+</code></pre></div></div>
+
+<h5 id="23-文件移动">2.3 文件移动</h5>
+
+<p>rm为文件移动命令，格式：</p>
+<blockquote>
+  <p>格式1：mv file1 file2<br />
+格式2：mv f1 f2 f3 … dir<br />
+格式3：mv dir1 dir2</p>
+</blockquote>
+
+<p>格式1、3将文件/目录重命名，格式2将若干文件移动到目录dir下。</p>
+
+<h5 id="24-文件删除">2.4 文件删除</h5>
+
+<p>rm为文件删除命令，格式：</p>
+<blockquote>
+  <p>rm f1 … dir1 …</p>
+</blockquote>
+
+<p>rm可以删除文件，也可以删除目录。</p>
+
+<p>-r 递归地(Recursive)删除实参表中的目录，也就是删除一整棵目录树；<br />
+-i 每删除一个文件前需要操作员确认(Inform)；<br />
+-f 强迫删除(Force)。只读文件也被删除并且无提示。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm -r abc.dir
+rm -i *.py
+rm -f test.py
+</code></pre></div></div>
+
+<p>若当前目录下有a、b、-i(可以使用cat &gt; -i创建) 3个文件：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//只提供选项，未提供文件名，命令执行失败
+rm -i
+
+//shell展开后为rm -i a b，执行确认删除但无法删除-i文件
+rm *
+
+//可以删除-i文件
+rm ./-i
+</code></pre></div></div>
+
+<p>为了处理’-‘开头的文件，大部分命令都遵循一个惯例：用’--‘显式的表示选项结束。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm --interactive -- -i
+rm -i -- -i
+rm -- -i
+</code></pre></div></div>
+
+<h3 id="3-目录管理">3. 目录管理</h3>
+
+<h5 id="31-路径名">3.1 路径名</h5>
+
+<p>绝对路径名与相对路径：相对路径是以当前路径为起点，绝对路径是根目录/为起点，路径分量分隔符用斜线/。</p>
+
+<p>当前工作目录：当前工作目录是进程属性的一部分，每进程都有一个当前工作目录。</p>
+
+<p>文件.与..：分别代表当前目录与上一级目录，这两个目录由系统创建删除。</p>
+
+<p>主目录：Linux是一个多用户操作系统，每个用户都有一个主目录(Home Directory)，主目录的设置可以从/etc/passwd文件中看到，
+一般在root用户创建用户时指定其主目录与shell，用env命令可以查看环境变量HOME的值。</p>
+
+<h5 id="32-创建目录">3.2 创建目录</h5>
+
+<p>创建目录可以使用mkdir命令，例：mkdir src，mkdir除创建目录外，还会在目录中自动建立文件.与..。</p>
+
+<p>选项-p，自动创建路径中不存在的目录(make parent directories as needed)。例如： mkdir -p log/2019/01/26</p>
+
+<h5 id="33-复制目录">3.3 复制目录</h5>
+
+<p>cp命令除复制文件外还可以复制目录。</p>
+
+<p>选项–r，递归地复制一个目录。</p>
+
+<p>命令cp -r dir1 dir2 根据dir2是否存在，执行结果有差异：<br />
+若dir2不存在，则新建子目录dir2，把dir1下内容拷入dir2下；若dir2已存在，则dir2下新建子目录dir1，把dir1下内容拷入dir2/dir1下。</p>
+
+<p>选项–v，冗长(verbose)方式，复制目录时实时列出正在复制的文件名字。</p>
+
+<p>选项-u，增量拷贝(update)，检查dir2中的文件是否存在，若不存在立即复制；若存在的话则比对两个文件夹中同名文件的最后一次修改时间，
+若dir1中的修改时间较晚则复制到dir2中。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//复制目录，将目录work.d复制为bak.d，若bak.d不存在。
+cp -r work.d bak.d 
+
+//若bak.d已存在
+cp -r work.d/* bak.d
+</code></pre></div></div>
+
+<h5 id="34-移动目录">3.4 移动目录</h5>
+
+<p>参考2.3章节。</p>
+
+<h5 id="35-删除目录">3.5 删除目录</h5>
+
+<p>删除目录可以使用rmdir命令，rmdir命令要求被删除的目录除.与..外无其它文件或目录，例：rmdir src。</p>
+
+<p>如果目录中有其他文件则可以使用rm命令，例如：rm -r src。</p>
+
+<p>注意：rmdir命令没有-r选项。</p>
+
+<h5 id="36-改变目录">3.6 改变目录</h5>
+
+<p>cd命令：改变当前工作目录(Change Directory)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /usr/include
+cd /
+cd .. 
+cd
+</code></pre></div></div>
+<p>cd命令若不带参数则返回到用户的主目录，cd ..代表返回上一级目录。</p>
+
+<p>注意：cd是shell的一个内部命令，即系统中不存在一个名为cd的可执行文件，而ls是一个外部命令，系统中存在一个名为ls的可执行文件。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ whereis cd
+cd:
+zm@acer:~$ whereis ls
+ls: /bin/ls /usr/share/man/man1/ls.1.gz
+</code></pre></div></div>
+
+<h5 id="37-rsync功能">3.7 rsync功能</h5>
+
+<p>rsync适用于在网络中传输大文件，其效率高。</p>
+
+<p>rsync用一精巧的算法，将文件分块，在两主机间传播数据块的hash值，据此推出两版本文件之间区别，使得网络只传输文件的增、删、改部分。</p>
+
+<h5 id="38-其他命令">3.8 其他命令</h5>
+
+<p>pwd命令：打印当前工作目录(print working directory)。</p>
+
+<p>touch命令：将文件的最后一次修改时间设置为当前时间，但不修改文件内容。例如：touch *.[ch]。</p>
+
+<h3 id="4-文件打包与压缩">4. 文件打包与压缩</h3>
+
+<p>文件打包tar命令最早为顺序访问的磁带机设备而设计的(Tape ARchive)，用于保存和恢复磁带上的文件。早期的计算机系统，硬盘容量不大，
+磁带容量大而且便宜，常使用磁带机进行数据备份和恢复，由于Linux中一切设备都是文件，这个命令也沿用至今。</p>
+
+<p>打包是指将一大堆文件或目录变成一个总的文件；压缩则是将一个大的文件通过一些压缩算法变成一个小文件。tar命令不指定压缩算法时为打包。</p>
+
+<p>命令语法：</p>
+<blockquote>
+  <p>tar [ctxv][u] [f device] file-list</p>
+</blockquote>
+
+<p>选项第一字母指定要执行的操作，是必需的:<br />
+c: Create，创建新文件；   <br />
+t: Table，列出所有的文件，也可以指定文件名； <br />
+x: Extract，抽取所有文件，也可以指定文件名；  <br />
+v: Verbose，每处理一个文件，就打印出文件名，并在该名前冠以功能字母；<br />
+f: File，指定文件名(含目录)(当出现f选项时，一定要指定文件名)；<br />
+z: 采用压缩格式(gzip算法，压缩速度快，压缩文件较bzip2大)；<br />
+j: 采用压缩格式(bzip2算法，压缩速度慢，压缩文件较gzip算法小)；<br />
+r: 追加文件到包中，不支持压缩包；<br />
+u: 更新文件到包中，不支持压缩包；早期计算机系统中把文件追加到磁带的尾部，这个文件的某个版本也可能已经存在磁带上，为了兼顾磁带顺序访问的特点，
+新版本的文件会被追加到磁带尾部，旧版本文件仍在磁带中，恢复过程中，后面的同名文件会覆盖掉前面的某个版本。</p>
+
+<p>注意：虽然Linux中没有文件后缀，为了方便阅读，通常以.tar代表包、.tar.gz代表gzip压缩、.tar.gz.bz2代表bzip2压缩。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//仅打包，不压缩！
+tar -cvf src.tar *.[ch]  
+
+//打包整个目录
+tar -cvf test.tar test.dir
+
+//打包并以gzip算法压缩
+tar -zcvf src.tar.gz *.[ch]
+
+//打包并以bzip2算法压缩
+tar -jcvf src.tar.bz2 *.[ch]
+
+//解包、解压缩
+tar -xvf src.tar
+
+//打印文件列表，不解压缩
+tar -tvf src.tar
+
+//漏掉选项f必需的文件名，shell对文件名的展开后，会将排位第一的文件当作文件名
+tar cvf *.[ch] makefile 
+</code></pre></div></div>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

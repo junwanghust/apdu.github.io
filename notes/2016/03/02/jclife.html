@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>Java Card Applet 的生命周期 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/03/02/jclife.html" title="Java Card Applet 的生命周期">Java Card Applet 的生命周期</a></h1>
+	<p class="entry-date">2016-03-02</p>
+	<p>本文所指的Applet是为Java Card所写的Applet，与通常所说的Java Applet不是一回事。</p>
+
+<p>一个Java卡实例的生命周期起始于JCRE（Java Card Runtime Environment) 通过Applet.register注册，结束于删除；JCRE通过 Applet的install、select、 deselect和 process与Applet进行交互。</p>
+
+<h5 id="install方法">install方法</h5>
+
+<p>当Applet实例创建时，JCRE不会直接调用构造函数，而是通过调用静态方法install(byte[], short, byte);如果install方法没有实现，那么Applet对象就无法被创建。</p>
+
+<p>当方法install(byte[], short, byte)被调用时， applet实例还没有被创建。 applet中的install方法的主要任务是使用applet子类的构造器创建它的实例，并注册这个实例。</p>
+
+<p>Applet.register方法或Applet.register(byte[], short, byte)方法用于指定applet的AID。</p>
+
+<h5 id="select方法">select方法</h5>
+
+<p>如果没有选中applet，那么applet都处于空闲状态，在JCRE调用select()方法之前，先要调用deselect()方法来释放之前选中的applet；select()方法可以根据不同的条件来返回true或者是false或者抛出一个异常，如果返回了true那么就代表这个applet被选中了，后续的指令都会通过process()方法来处理。</p>
+
+<p>另外需要注意的一点是，当选中了applet时，selectingApplet()方法会返回true，使用selectingApplet()方法便可与process()方法中的其它select方法区分开，用法见下文代码。</p>
+
+<h5 id="process方法">process方法</h5>
+
+<p>选择applet后，后续的APDU指令会通过本方法来处理，但某些优先级较高的指令除外，比如：MANAGE CHANNEL指令会被Java Card平台优先处理。该方法必须实现。</p>
+
+<h5 id="deselect方法">deselect方法</h5>
+
+<p>用来取消applet的选定，deselect()方法允许applet来清空一些Ram变量即CLEAR_ON_DESELECT；当执行deslect()方法执行时selectingApplet()方法会返回false。</p>
+
+<h5 id="uninstall方法">uninstall方法</h5>
+
+<p>当JCRE删除实例时会调用该方法，由于静态属性属于类，因此在此方法中可能包含一些对于静态属性的处理。</p>
+
+<p>源码及注释：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">im</span><span class="p">.</span><span class="n">map</span><span class="p">.</span><span class="n">card</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">javacard</span><span class="p">.</span><span class="n">framework</span><span class="p">.</span><span class="n">Applet</span><span class="p">;</span>  
+<span class="n">import</span> <span class="n">javacard</span><span class="p">.</span><span class="n">framework</span><span class="p">.</span><span class="n">ISO7816</span><span class="p">;</span>  
+<span class="n">import</span> <span class="n">javacard</span><span class="p">.</span><span class="n">framework</span><span class="p">.</span><span class="n">ISOException</span><span class="p">;</span>  
+<span class="n">import</span> <span class="n">javacard</span><span class="p">.</span><span class="n">framework</span><span class="p">.</span><span class="n">APDU</span><span class="p">;</span>  
+<span class="n">import</span> <span class="n">javacard</span><span class="p">.</span><span class="n">framework</span><span class="p">.</span><span class="n">Util</span><span class="p">;</span>  
+
+<span class="k">public</span> <span class="n">class</span> <span class="n">myCard</span> <span class="n">extends</span> <span class="n">Applet</span> <span class="p">{</span>
+
+	<span class="k">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">install</span><span class="p">(</span><span class="n">byte</span><span class="p">[]</span> <span class="n">bArray</span><span class="p">,</span> <span class="n">short</span> <span class="n">bOffset</span><span class="p">,</span> <span class="n">byte</span> <span class="n">bLength</span><span class="p">)</span> <span class="p">{</span><span class="err">    </span> 
+
+	<span class="p">//</span> <span class="n">GP</span><span class="p">-</span><span class="n">compliant</span> <span class="n">JavaCard</span> <span class="n">applet</span> <span class="n">registration</span>
+
+	<span class="n">new</span> <span class="n">myCard</span><span class="p">().</span><span class="n">register</span><span class="p">(</span><span class="n">bArray</span><span class="p">,</span> <span class="p">(</span><span class="n">short</span><span class="p">)</span> <span class="p">(</span><span class="n">bOffset</span> <span class="p">+</span> <span class="m">1</span><span class="p">),</span> <span class="n">bArray</span><span class="p">[</span><span class="n">bOffset</span><span class="p">]);</span>
+
+	<span class="p">}</span>
+
+	<span class="k">public</span> <span class="n">void</span> <span class="n">process</span><span class="p">(</span><span class="n">APDU</span> <span class="n">apdu</span><span class="p">)</span> <span class="p">{</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">selectingApplet</span><span class="p">())</span> <span class="p">{</span><span class="err">           </span><span class="p">//</span><span class="err">当然也可以在</span><span class="n">return</span><span class="err">前进行其它处理使其返回</span><span class="n">FCI</span><span class="p">+</span><span class="n">SW</span><span class="err">，默认只返回</span><span class="n">SW</span><span class="err">。</span>
+			<span class="n">return</span><span class="p">;</span>
+
+		<span class="p">//</span><span class="n">ISOException</span><span class="p">.</span><span class="n">throwIt</span><span class="p">(</span><span class="n">ISO7816</span><span class="p">.</span><span class="n">SW</span><span class="p">\</span><span class="n">_NO</span><span class="p">\</span><span class="n">_ERROR</span><span class="p">);</span><span class="err">   </span><span class="p">//</span><span class="err">也可以把</span><span class="n">return</span><span class="err">屏蔽，把这一行放开，作用一样，便于理解。</span>
+
+	<span class="p">}</span>	
+
+	<span class="n">byte</span><span class="p">[]</span> <span class="n">buf</span> <span class="p">=</span> <span class="n">apdu</span><span class="p">.</span><span class="n">getBuffer</span><span class="p">();</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">ISO7816</span><span class="p">.</span><span class="n">OFFSET_INS</span><span class="p">]==(</span><span class="n">byte</span><span class="p">)</span><span class="m">0xCC</span><span class="p">)</span><span class="err">           </span><span class="p">//</span><span class="err">根据</span><span class="n">INS</span><span class="err">进入不同方法</span>
+
+		<span class="n">CMD_CC</span><span class="p">(</span><span class="n">apdu</span><span class="p">);</span>
+
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">ISO7816</span><span class="p">.</span><span class="n">OFFSET_INS</span><span class="p">]==(</span><span class="n">byte</span><span class="p">)</span><span class="m">0xA4</span><span class="p">)</span>
+
+		<span class="n">ISOException</span><span class="p">.</span><span class="n">throwIt</span><span class="p">(</span><span class="n">ISO7816</span><span class="p">.</span><span class="n">SW</span><span class="p">\</span><span class="n">_FILE</span><span class="p">\</span><span class="n">_NOT</span><span class="p">\</span><span class="n">_FOUND</span><span class="p">);</span><span class="err">  </span><span class="p">//</span><span class="err">如果选择的不是</span><span class="n">applet</span><span class="err">并且进入了该</span><span class="n">process</span><span class="err">则返回</span><span class="m">6</span><span class="n">A82</span><span class="err">，即</span><span class="n">SW</span><span class="p">\</span><span class="n">_FILE</span><span class="p">\</span><span class="n">_NOT</span><span class="p">\</span><span class="n">_FOUND</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">ISO7816</span><span class="p">.</span><span class="n">OFFSET_INS</span><span class="p">]==(</span><span class="n">byte</span><span class="p">)</span><span class="m">0xCC</span><span class="p">)</span>
+
+		<span class="n">CMD_CC</span><span class="p">(</span><span class="n">apdu</span><span class="p">);</span>
+
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">ISO7816</span><span class="p">.</span><span class="n">OFFSET_INS</span><span class="p">]==(</span><span class="n">byte</span><span class="p">)</span><span class="m">0xA4</span><span class="p">)</span>
+
+		<span class="n">ISOException</span><span class="p">.</span><span class="n">throwIt</span><span class="p">(</span><span class="n">ISO7816</span><span class="p">.</span><span class="n">SW</span><span class="p">\</span><span class="n">_FILE</span><span class="p">\</span><span class="n">_NOT_FOUND</span><span class="p">);</span>
+
+	<span class="k">else</span>
+
+		<span class="n">ISOException</span><span class="p">.</span><span class="n">throwIt</span><span class="p">(</span><span class="n">ISO7816</span><span class="p">.</span><span class="n">SW</span><span class="p">\</span><span class="n">_INS</span><span class="p">\</span><span class="n">_NOT</span><span class="p">\</span><span class="n">_SUPPORTED</span><span class="p">);</span><span class="err">     </span><span class="p">//</span><span class="err">其它进入</span><span class="n">process</span><span class="err">的</span><span class="n">INS</span><span class="err">返回</span><span class="m">6</span><span class="n">D00</span><span class="err">，即</span><span class="n">SW</span><span class="p">\</span><span class="n">_INS</span><span class="p">\</span><span class="n">_NOT</span><span class="p">\</span><span class="n">_SUPPORTED</span>
+
+	<span class="p">}</span>
+
+	<span class="k">public</span> <span class="n">void</span> <span class="n">CMD_CC</span><span class="p">(</span><span class="n">APDU</span> <span class="n">apdu</span><span class="p">)</span><span class="err">        </span><span class="p">//</span><span class="err">用于返回固定值</span><span class="m">1122</span>
+
+	<span class="p">{</span>
+
+		<span class="n">byte</span><span class="p">[]</span> <span class="n">buf</span> <span class="p">=</span> <span class="n">apdu</span><span class="p">.</span><span class="n">getBuffer</span><span class="p">();</span>
+
+		<span class="n">Util</span><span class="p">.</span><span class="n">setShort</span><span class="p">(</span><span class="n">buf</span><span class="p">,(</span><span class="n">short</span><span class="p">)</span><span class="m">0</span><span class="p">,(</span><span class="n">short</span><span class="p">)</span><span class="m">0x1122</span><span class="p">);</span><span class="err">  </span><span class="p">//</span><span class="err">赋值函数，从数组下标</span><span class="m">0</span><span class="err">开始，复制两字节的数据</span><span class="m">0x1122</span><span class="err">给</span><span class="n">buf</span>
+
+		<span class="n">apdu</span><span class="p">.</span><span class="n">setOutgoingAndSend</span><span class="p">((</span><span class="n">short</span><span class="p">)</span><span class="m">0</span><span class="p">,(</span><span class="n">short</span><span class="p">)</span><span class="m">2</span><span class="p">);</span><span class="err">      </span><span class="p">//</span><span class="err">返回数据</span>
+
+	<span class="p">}</span>
+
+	<span class="p">//</span><span class="n">select</span> <span class="n">deselect</span> <span class="n">uninstall</span><span class="err">方法默认可不实现。</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>参考文档：<br />
+<em>[1] Runtime Environment Specification -Java Card™ Platform, Version 2.2.2</em></p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

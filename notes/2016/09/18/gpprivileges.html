@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>GP Application Privileges Coding | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/09/18/gpprivileges.html" title="GP Application Privileges Coding">GP Application Privileges Coding</a></h1>
+	<p class="entry-date">2016-09-18</p>
+	<h5 id="dap-verification">DAP Verification</h5>
+
+<p>Application is capable of verifying a DAP.</p>
+
+<h5 id="mandated-dap-verification">Mandated DAP Verification</h5>
+<p>Application is capable of and requires the verification of a DAP for all load operations.</p>
+<h5 id="cvm-management">CVM management</h5>
+<p>This privilege indicates that the Application being installed will have the ability to successfully
+invoke the setPin(), update(), blockState(), resetAndUnblockState() and setTryLimit() methods
+which will cause the value of the global PIN or variables pertaining to the management of the
+Global PIN to change.</p>
+<h5 id="card-reset">Card Reset</h5>
+<p>This privilege indicates that the Application being installed for make selectable becomes the
+default selected application and has the privilege to modify historical bytes on one or more card
+interfaces.</p>
+<h5 id="card-terminate">Card Terminate</h5>
+<p>This privilege indicates that the Application being installed will have the ability to successfully
+invoke the terminateCardManager() or terminateCard() methods, which will cause the card to
+reject all commands besides the GET DATA command.</p>
+<h5 id="card-lock">Card Lock</h5>
+<p>This privilege indicates that the Application being installed will have the ability to successfully
+invoke the lockCardManager() or lockCard() methods, which will cause the card to be locked.</p>
+<h5 id="delegated-management">Delegated Management:</h5>
+<p>Application is capable of Delegated Management.</p>
+<h5 id="global-service">Global Service</h5>
+<p>Application provides services to other Applications on the card.</p>
+<h5 id="final-application">Final Application</h5>
+<p>The only Application accessible in card Life Cycle State CARD_LOCKED and TERMINATED.</p>
+<h5 id="global-registry">Global Registry</h5>
+<p>This privilege indicates that the Application being installed Application may access any entry in
+the GlobalPlatform Registry.</p>
+<h5 id="global-lock">Global Lock</h5>
+<p>This privilege indicates that the Application being installed may lock or unlock any other
+application.</p>
+<h5 id="global-delete">Global Delete</h5>
+<p>Application may delete any Card Content.</p>
+<h5 id="token-verification">Token Verification</h5>
+<p>Application is capable of verifying a token for Delegated Card Content Management.</p>
+<h5 id="authorized-management">Authorized Management</h5>
+<p>Application is capable of Card Content Management.</p>
+<h5 id="trusted-path">Trusted Path</h5>
+<p>Application is a Trusted Path for interapplication communication.</p>
+<h5 id="ciphered-load-file-data-block">Ciphered Load File Data Block</h5>
+<p>Mandated Ciphered Load File Data Block. Is capable of the ciphering the encrypted load file of
+confidential content management.</p>
+<h5 id="receipt-generation">Receipt Generation</h5>
+<p>Application is capable of generating a receipt for Delegated Card Content Management.</p>
+
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

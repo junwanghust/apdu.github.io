@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>GP Tokens | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2018/07/17/tokencalc.html" title="GP Tokens">GP Tokens</a></h1>
+	<p class="entry-date">2018-07-17</p>
+	<p>如果你对委托管理(Delegated Management)不熟悉的话，可以先阅读 <a href="/notes/2015/09/11/gpdm.html">GP委托管理介绍</a> 。</p>
+
+<p>在委托管理权限的安全域下进行安装删除操作时经常要用到令牌（Token），下文介绍GP2.2规范中Token的计算。</p>
+
+<h3 id="1-token-key">1. Token Key</h3>
+
+<p>如果卡片支持Delegated Management，则具有Token验证权限的安全域应具有一个RSA公钥用于验证Token，
+卡片只存储RSA公钥用于验证Token，而Token的生成则需要用到RSA私钥，计算通常是在服务器端完成。</p>
+
+<p>Token Key密钥长度通常为1024bits以上，常用的有1024/2048bits，由于Token长度最长可为2048bits，一条指令放不下时，可以分两条指令。</p>
+
+<p>下文中所用到的密钥取值如下：</p>
+<blockquote>
+  <p>rsa_n:<br />
+AE885C6E4E981040D4B37327CA883B92DBD87CBD3485A8FD449BE2FF7A291C3D532ED95558B6A80A3238458211CEA8E4238E47B9225D75773A469F6E746CCD38467B4879332BE004716BCB691365E7DB793AE3E6743406EEC14F701887467BF27E5B301BC1C5A184EC1C725FED8D840F29D05782396CB36F920BE7A70DC46D35</p>
+</blockquote>
+
+<blockquote>
+  <p>rsa_e:<br />
+010001</p>
+</blockquote>
+
+<blockquote>
+  <p>rsa_d: <br />
+545F735F97FB07107042F80E6A6885742F776E8601180463BB8128B19C9AB71E2652659A4EB2AE758F6588A4A27B274672B1DB967238800ACD4F4ACF98D4E837D9D43B42EF3C3AFEA321DB5E7CB85B4AA90303A6EAF5F379BA757AACD18654195E3DDB9E05599F97D103533B5482431D925C66F60705CFE4C32C01BCB3A4A9D9</p>
+</blockquote>
+
+<h3 id="2-token-type">2. Token Type</h3>
+
+<p>“GlobalPlatform Card Specification 2.2”将Token分为：</p>
+
+<ol>
+  <li>Load Token;</li>
+  <li>Install Token;</li>
+  <li>Make Selectable Token;</li>
+  <li>Extradition Token;</li>
+  <li>Registry Update Token;</li>
+  <li>Delete Token;</li>
+  <li>Load, Install and Make Selectable Token.</li>
+</ol>
+
+<p>注意：更多的时候用到的是Install for Install &amp; Make Selectable这条组合指令(P1=0C)，INSTALL for Personalization不需要带Token。</p>
+
+<h3 id="3-tokens">3. Tokens</h3>
+
+<p>虽然Token可分为7种，但计算过程中所需要组织的数据格式基本是相同的，偶有细微差别，
+算法均为PKCS#1，算法工具可用 <a href="https://github.com/APDU/SmartCardPlus">SmartCard Plus</a>。</p>
+
+<p>一条完整的Case4 APDU命令如下:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>CLA</td>
+      <td>INS</td>
+      <td>P1 P2</td>
+      <td>Lc</td>
+      <td>Data</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>计算Token的数据是从P1P2开始到Data结束，需要注意的是Data不包含token相关的数据，对应的Lc也应当减去token相关数据的长度。</p>
+
+<h5 id="31-load-token">3.1 Load Token</h5>
+
+<p>下面列出了带Token的Install for Load指令的Data域</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Presence</th>
+      <th>e.g. (Hex)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Length of Load File AID</td>
+      <td>Mandatory</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Load File AID</td>
+      <td>Mandatory</td>
+      <td>A0000000000000000000000000000F11</td>
+    </tr>
+    <tr>
+      <td>Length of Security Domain AID</td>
+      <td>Conditional</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td>Security Domain AID</td>
+      <td>Conditional</td>
+      <td>null</td>
+    </tr>
+    <tr>
+      <td>Length of Load File Data Block Hash</td>
+      <td>Mandatory</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <td>Load File Data Block Hash</td>
+      <td>Mandatory</td>
+      <td>191C75E26A909CD79BDA3BB8C5787CC08CA7CB96</td>
+    </tr>
+    <tr>
+      <td>Length of Load Parameters field</td>
+      <td>Conditional</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td>Load Parameters field</td>
+      <td>Conditional</td>
+      <td>null</td>
+    </tr>
+    <tr>
+      <td>Length of Load Token</td>
+      <td>Mandatory</td>
+      <td>80</td>
+    </tr>
+    <tr>
+      <td>Load Token</td>
+      <td>Mandatory</td>
+      <td>…</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>当Load指令带Token时，Hash值是必须要出现的，如下给出了上述表格示例数据中Load Token的计算数据：</p>
+<blockquote>
+  <p>0200 28 10 A0000000000000000000000000000F11 00 14 191C75E26A909CD79BDA3BB8C5787CC08CA7CB96 00</p>
+</blockquote>
+
+<p>其中0200为P1P2，28为后续数据域长度。</p>
+
+<p>Token值为：</p>
+<blockquote>
+  <p>215480781F37CA05E336B4C24B53EF678F739BFF482D966260CC6F9F5E7AE5E05AD53EAD694D63344389CF5803736E4C16D99267D99A6D4E400D8D1CBA60B8BCDBB99C78F0928AA9317D31540CBD635569FE2005FAFF7E672F0545E622E6210D7F57608DE8C901E2252B4F4AB36985593DF104DFBB4C0505EE82A6A00867FAB7</p>
+</blockquote>
+
+<h5 id="32-install-token">3.2 Install Token</h5>
+
+<p>下面列出了带Token的Install for Install指令的Data域</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Presence</th>
+      <th>e.g. (Hex)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Length of Executable Load File AID</td>
+      <td>Mandatory</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Executable Load File AID</td>
+      <td>Conditional</td>
+      <td>A0000000000000000000000000000F11</td>
+    </tr>
+    <tr>
+      <td>Length of Executable Module AID</td>
+      <td>Mandatory</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Executable Module AID</td>
+      <td>Conditional</td>
+      <td>A0000000000000000000000000000E11</td>
+    </tr>
+    <tr>
+      <td>Length of Application AID</td>
+      <td>Mandatory</td>
+      <td>07</td>
+    </tr>
+    <tr>
+      <td>Application AID</td>
+      <td>Mandatory</td>
+      <td>A0000000000011</td>
+    </tr>
+    <tr>
+      <td>Length of Privileges</td>
+      <td>Mandatory</td>
+      <td>01</td>
+    </tr>
+    <tr>
+      <td>Privileges</td>
+      <td>Mandatory</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td>Length of Install Parameters field</td>
+      <td>Mandatory</td>
+      <td>02</td>
+    </tr>
+    <tr>
+      <td>Install Parameters field</td>
+      <td>Mandatory</td>
+      <td>C900</td>
+    </tr>
+    <tr>
+      <td>Length of Install Token</td>
+      <td>Mandatory</td>
+      <td>80</td>
+    </tr>
+    <tr>
+      <td>Install Token</td>
+      <td>Mandatory</td>
+      <td>…</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>如下给出了上述表格示例数据中Install Token的计算数据：</p>
+<blockquote>
+  <p>0400 2F 10 A0000000000000000000000000000F11 10 A0000000000000000000000000000E11 07 A0000000000011 01 00 02 C900</p>
+</blockquote>
+
+<p>其中0400为P1P2，2F为后续数据域长度。</p>
+
+<p>Token值为：</p>
+<blockquote>
+  <p>9FE36CCECE6B639D54B9F163B07E0E44E42A63B06088A2573AA382C12B008B723222C557DC434D38B3B6248EA7C613D63379AA0D18DFAF272539BFABCF8F0DF7388A6C77AAFFF772E38C6D2D0B4AD2254E0EB89BB05D6389D8E1520334EDF653478FB1EC4196CA9C27CECF62A84548FA2E985AF7F569520E12974E3B99B5DFC6</p>
+</blockquote>
+
+<h5 id="33-make-selectable-token">3.3 Make Selectable Token</h5>
+
+<p>下面列出了带Token的Install for Make Selectable指令的Data域</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Presence</th>
+      <th>e.g. (Hex)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Length of data</td>
+      <td>Mandatory</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td>Length of data</td>
+      <td>Mandatory</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td>Length of Application AID</td>
+      <td>Mandatory</td>
+      <td>07</td>
+    </tr>
+    <tr>
+      <td>Application AID</td>
+      <td>Mandatory</td>
+      <td>A0000000000011</td>
+    </tr>
+    <tr>
+      <td>Length of Privileges</td>
+      <td>Mandatory</td>
+      <td>01</td>
+    </tr>
+    <tr>
+      <td>Privileges</td>
+      <td>Mandatory</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td>Length of Make Selectable Parameters field</td>
+      <td>Mandatory</td>
+      <td>02</td>
+    </tr>
+    <tr>
+      <td>Make Selectable Parameters field</td>
+      <td>Conditional</td>
+      <td>C900</td>
+    </tr>
+    <tr>
+      <td>Length of Make Selectable Token</td>
+      <td>Mandatory</td>
+      <td>80</td>
+    </tr>
+    <tr>
+      <td>Make Selectable Token</td>
+      <td>Mandatory</td>
+      <td>…</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>如下给出了上述表格示例数据中Make Selectable Token的计算数据：</p>
+<blockquote>
+  <p>0800 0F 00 00 07 A0000000000011 01 00 02 C900</p>
+</blockquote>
+
+<p>其中0800为P1P2，0F为后续数据域长度。</p>
+
+<p>Token值为：</p>
+<blockquote>
+  <p>2706F037BEC44C357B8CAAA8CA9C066BEC3D6C388577A7E390E1EF1B61A452559392FE26BF1B5C9DCA539CDD19EE997B4CCD659076C8299204CA63A50EA6944EDAAD1949FAA0C256CD149DA14783ACB38B9D67C093569F402D336B1700323C1AC1A7E48D7A9C33D06DCA16201C13BBC5E7494BF5CE255E8C4E4C8F0131CA4432</p>
+</blockquote>
+
+<h5 id="34-extradition-token">3.4 Extradition Token</h5>
+
+<p>略</p>
+
+<h5 id="35-registry-update-token">3.5 Registry Update Token</h5>
+
+<p>略</p>
+
+<h5 id="36-delete-token">3.6 Delete Token</h5>
+
+<p>下面列出了带Token的Delete指令的Data域</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Presence</th>
+      <th>e.g. (Hex)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Application or Executable Load File AID tag</td>
+      <td>Mandatory</td>
+      <td>4F</td>
+    </tr>
+    <tr>
+      <td>AID length</td>
+      <td>Mandatory</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Application or Executable Load File AID</td>
+      <td>Mandatory</td>
+      <td>A0000000000000000000000000000F11</td>
+    </tr>
+    <tr>
+      <td>Control Reference Template tag</td>
+      <td>Conditional</td>
+      <td>null</td>
+    </tr>
+    <tr>
+      <td>Control Reference Template length</td>
+      <td>Conditional</td>
+      <td>null</td>
+    </tr>
+    <tr>
+      <td>Control Reference Template</td>
+      <td>Conditional</td>
+      <td>null</td>
+    </tr>
+    <tr>
+      <td>Delete Token tag</td>
+      <td>Mandatory</td>
+      <td>9E</td>
+    </tr>
+    <tr>
+      <td>Length of Delete Token</td>
+      <td>Mandatory</td>
+      <td>8180</td>
+    </tr>
+    <tr>
+      <td>Delete Token</td>
+      <td>Mandatory</td>
+      <td>…</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>如下给出了上述表格示例数据中Delete Token的计算数据：</p>
+<blockquote>
+  <p>0080 12 4F 10 A0000000000000000000000000000F11</p>
+</blockquote>
+
+<p>其中0800为P1P2，12为后续数据域长度。</p>
+
+<p>Token值为：</p>
+<blockquote>
+  <p>18F203D74EBC4C45CDEFD99CDCB508E3137B8E6FC422653E6B68FB79DB5ECB265F5EF7E5E496527484F9C081DF0649199EC84A2A292A58EC14A3FC0BBCFCFCDDADF7CF698E5EFDA43680652455727D7C5D622C1EF7E3364635FAF690E7478BA7CD31A31956DB5A100DD9B6D2C909F24183D67792413B30B6A46475C863A995C2</p>
+</blockquote>
+
+<p>需要注意的是Delete Token是有tag的，且对应的长度前面应该加81，这一点与其它Token明显不同。</p>
+
+<h5 id="37-load-install-and-make-selectable-token">3.7 Load, Install and Make Selectable Token</h5>
+
+<p>这是一条组合指令的Token，其Token计算数据可分为两段：Load与Load, Install and Make Selectable。</p>
+
+<p>我们以3.1&amp;3.2章节数据为例，Load, Install and Make Selectable Token的计算数据：</p>
+
+<blockquote>
+  <p>0200 28 10 A0000000000000000000000000000F11 00 14 191C75E26A909CD79BDA3BB8C5787CC08CA7CB96 00</p>
+</blockquote>
+
+<blockquote>
+  <p>0E00 2F 10 A0000000000000000000000000000F11 10 A0000000000000000000000000000E11 07 A0000000000011 01 00 02 C900</p>
+</blockquote>
+
+<h3 id="4-非标tokens">4. 非标Tokens</h3>
+
+<p>在实际的应用中，RSA密钥对需要复杂的检测(如素性检测等)，通常不会一卡一密，这就造成了一个问题：多张卡的Token值可能是一样的。</p>
+
+<p>为了解决这个问题，通常会在参与计算Token的数据中加入UID之类的数据，比如运营商会使用ICCID来参与计算Token。</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

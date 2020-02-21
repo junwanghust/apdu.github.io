@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>通过安全域来个人化应用 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2015/09/02/sdper.html" title="通过安全域来个人化应用">通过安全域来个人化应用</a></h1>
+	<p class="entry-date">2015-09-02</p>
+	<p>GP规范INSTALL指令P1有如下定义:</p>
+
+<blockquote>
+  <p>b6 = 1 indicates that the currently selected SecurityDomain shall personalize one of its associated
+Applications and a subsequent STORE DATA command is to be expected</p>
+</blockquote>
+
+<p>即当前选择的安全域将会个人化与它关联的应用，并且后面跟随一系列的Store Data指令。
+也就是说通过Install for Personalization与Store Data完成个人化。</p>
+
+<p>从描述得知指令是传给安全域的，那安全域又是如何将数据传给应用？</p>
+
+<p>我们再来看一个API : public interface Application extends javacard.framework.Shareable,
+This defines the interface that represents an appletmethod accessible through the OPEN 
+to the Application’s associated Security Domain. This interface must be implemented by the Applet class that will use the additional functionality that allows a Security Domain to pass data to the applet.</p>
+
+<p>这个API可以将数据传给应用。</p>
+
+<p>选择安全域-&gt;Install for Personalization-&gt;Store Data，个人化就是这么简单。</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

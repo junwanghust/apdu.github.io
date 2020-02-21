@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>APDU命令与响应格式 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/02/16/apduintroduce.html" title="APDU命令与响应格式">APDU命令与响应格式</a></h1>
+	<p class="entry-date">2016-02-16</p>
+	<h2 id="1-命令格式">1. 命令格式</h2>
+
+<p>APDU命令由命令头和命令体组成： CLA | INS | P1 | P2 | Lc | DATA | Le</p>
+
+<p>命令头：  CLA | INS | P1 | P2</p>
+
+<p>命令体：  Lc | DATA | Le</p>
+
+<h6 id="11-命令各字段含义">1.1 命令各字段含义</h6>
+
+<p>CLA：命令报文的类别字节</p>
+
+<p>P1： 参数 1</p>
+
+<p>P2：参数 2</p>
+
+<p>Lc：Data的长度（含4字节mac）</p>
+
+<p>Data：在命令的数据字段中发送的字节串</p>
+
+<p>Le：在向命令响应的数据字段中期望的字节最大数</p>
+
+<h2 id="2-命令分类">2. 命令分类</h2>
+
+<p>Case1: CLA | INS | P1 | P2<br />
+Case2: CLA | INS | P1 | P2 | Le<br />
+Case3: CLA | INS | P1 | P2 | Lc | Data<br />
+Case4: CLA | INS | P1 | P2 | Lc | Data | Le</p>
+
+<h5 id="21-case1">2.1 Case1</h5>
+
+<p>这种情况时，命令中没有数据送到卡（ Lc）中，也没有数据从卡中返回（ Le）。</p>
+
+<p>不含安全报文的命令： CLA | INS | P1 | P2</p>
+
+<p>含安全报文的命令： CLA | INS | P1 | P2 |  Lc | MAC<br />
+注： Lc = MAC 的长度， 4 字节。</p>
+
+<h5 id="22-case2">2.2 Case2</h5>
+
+<p>这种情况时，命令中没有数据送到卡（ Lc）中，有数据从卡中返回（ Le）。</p>
+
+<p>不含安全报文的命令： CLA | INS | P1 | P2 | Le</p>
+
+<p>含安全报文的命令： CLA | INS | P1 | P2 | Lc | MAC | Le<br />
+注： Lc = MAC 的长度， 4 字节。</p>
+
+<h5 id="23-case3">2.3 Case3</h5>
+
+<p>这种情况时，命令中有数据送到卡（ Lc）中，没有数据从卡中返回（ Le）。</p>
+
+<p>不含安全报文的命令：  CLA | INS | P1 | P2 | Lc | Data</p>
+
+<p>含安全报文的命令：  CLA | INS | P1 | P2 | Lc | Data+MAC<br />
+注： Lc = 数据的长度 + MAC 的长度（ 4 字节）。</p>
+
+<h5 id="24-case4">2.4 Case4</h5>
+
+<p>这种情况时，命令中既有数据送到卡（ Lc）中，也有数据从卡中返回（ Le）。</p>
+
+<p>不含安全报文的命令： CLA | INS | P1 | P2 | Lc | Data | Le</p>
+
+<p>含安全报文的命令： CLA | INS | P1 | P2 | Lc | Data+MAC | Le<br />
+注： Lc = 数据的长度 + MAC 的长度（ 4 字节）。</p>
+
+<h2 id="3-命令响应格式">3. 命令响应格式</h2>
+
+<h5 id="31-格式1">3.1 格式1</h5>
+
+<p>Data |  SW1 | SW2</p>
+
+<h5 id="32-格式2">3.2 格式2</h5>
+
+<p>SW1 | SW2</p>
+
+<h5 id="33-响应各字段含义">3.3 响应各字段含义</h5>
+
+<p>Data：在响应的数据字段中收到的字节串</p>
+
+<p>SW1：状态字 1</p>
+
+<p>SW2：状态字 2</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

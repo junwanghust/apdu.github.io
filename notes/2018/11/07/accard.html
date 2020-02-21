@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>门禁是怎么回事？ | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2018/11/07/accard.html" title="门禁是怎么回事？">门禁是怎么回事？</a></h1>
+	<p class="entry-date">2018-11-07</p>
+	<p>现在支持NFC的手机越来越多，有了NFC你的手机可以是银行卡，可以是公交卡，甚至可以是门禁卡。</p>
+
+<p>手机模拟门禁卡也早已不是什么新鲜事，但鲜有手机厂商来做这件事，最早的是小米，最近华为也开始“门钥匙”功能适配。这对于消费者来说是好事，
+有了官方的支持，消费者不需要再自己动手，甚至是root手机了，相信会有越来越多的厂商来适配类似“门钥匙”的功能。</p>
+
+<p>那么门禁到底是如何工作的？如何确定门禁是否可以通过手机模拟？</p>
+
+<h4 id="1-普通门禁">1. 普通门禁</h4>
+
+<p>这是最常见的门禁种类，不需要ESAM模块或PSAM卡等，只需比对UID来判定是否可以开门，成本低。不过缺点也很明显十分容易复制。</p>
+
+<p>普通门禁可以分为两类：</p>
+<ol>
+  <li>13.56MHz的IC卡</li>
+  <li>125KHz的ID卡</li>
+</ol>
+
+<p>NFC的工作频率是13.56MHz，故模拟的门禁是IC卡。</p>
+
+<p>要想确定自己的门禁卡是IC卡还是ID卡可以有多种方法：</p>
+<ol>
+  <li>手机开启NFC功能后，将门禁卡靠近手机，如果有反应则为IC卡，没有反应则为ID卡；</li>
+  <li>使用带有芯片的公交卡或者银行卡靠近门禁读卡器，如果有反应则为IC卡，没有反应则为ID卡；</li>
+  <li>可以通过已知类型的门禁靠近门禁读卡器来判断。</li>
+</ol>
+
+<p>由于某些手机的NFC不支持读卡器模式，某些银行卡不带天线功能，所以方法1、2判断ID卡的结论并不总是成立，尽量使用公交卡或用多张银行卡测试来保证结果。</p>
+
+<h4 id="2-安全门禁">2. 安全门禁</h4>
+
+<p>这种门禁通常用在安全级别要求较高的场所，其原理是读卡器发送给门禁卡一串随机数，门禁卡使用存储在卡里的密钥加密随机数之后返回给读卡器，
+最后读卡器通过ESAM模块或PSAM卡也加密一次这个随机数，如果这两个随机数的加密结果一样，则可以开门。</p>
+
+<p>加密门禁通常为13.56MHz的IC卡，由于读卡器有了认证功能，复制门禁卡比较困难。</p>
+
+<h4 id="3-门禁复制">3. 门禁复制</h4>
+
+<h5 id="31-普通门禁复制">3.1 普通门禁复制</h5>
+
+<p>这种门禁最简单，修改UID即可。</p>
+
+<p>由于ID卡我没接触过，这里就略过了。</p>
+
+<p>获取UID的方式有4种：</p>
+<ol>
+  <li>Mifare Classic Tool / NFC Tools等APP，需要Android手机且支持NFC；</li>
+  <li>手机厂商支持的方式；</li>
+  <li>PCSC读卡器+BusHound；</li>
+  <li>直接使用某种私有方式获取(针对专业人员)。</li>
+</ol>
+
+<p>修改UID的方式有4种：</p>
+<ol>
+  <li>Mifare Classic Tool APP直接写入一张白卡，需要Android手机且支持NFC;</li>
+  <li>手机厂商支持的方式；</li>
+  <li>对于NFC手机，修改conf文件中的uid即可(Broadcom/NXP芯片不同，需要先ROOT)；</li>
+  <li>直接使用某种私有方式更改(针对专业人员)。</li>
+</ol>
+
+<p>PCSC读卡器+BusHound获取UID方法: 将IC卡放到PCSC读卡器后，找到93 20所在的位置，下一行的最后为UID。
+下面示例中“1e 16 c6 0f”为UID，c1为UID的CRC校验字节。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OUT    6b 08 00 00  00 00 ae 00  00 00 ae 6a  00 00 00 02  93 20               
+IN     83 0b 00 00  00 00 ae 02  00 00 00 28  00 00 00 00  1e 16 c6 0f  c1  
+</code></pre></div></div>
+
+<h5 id="32-安全门禁复制">3.2 安全门禁复制</h5>
+
+<p>我见过的安全门禁都是基于Mifare功能，不过值得庆幸的是Mifare已经被破解了，其历史不再赘述，
+这类的破解有一定的成本：百元左右的acr122u读卡器，且需要一定的动手能力，
+工具可以使用<a href="https://github.com/nfc-tools/mfoc">mfoc</a>。</p>
+
+<p>一般涉及到消费或者安全才需要这样的门禁，所以请勿使用破解门禁。</p>
+
+<p>最后，给NFC Tools一个好评，它可以直接用手机给IC卡发送APDU指令，‘其它’-‘先进的NFC命令’，即可发送指令。</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

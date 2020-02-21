@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>PSE & PPSE | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2018/08/08/pseppse.html" title="PSE & PPSE">PSE & PPSE</a></h1>
+	<p class="entry-date">2018-08-08</p>
+	<p>初入门PBOC时，对于支付系统环境很是迷惑，通常说的系统环境我们可以理解为Windows、Linux、Mac等，PBOC交易流程中系统环境到底是个啥？</p>
+
+<p>其实它就是个DDF(Directory Definition File)文件，列出了目录下有哪些应用，不同的应用通过AID来区分。</p>
+
+<h4 id="psepayment-system-environment">PSE(Payment System Environment)</h4>
+
+<p>支付系统环境，文件名“1PAY.SYS.DDF01”，转换成ASCII是“315041592E5359532E4444463031”。</p>
+
+<p>借记贷记交易流程中的目录选择方式就是通过选择PSE来获取AID列表，卡片接收到选择PSE指令后会返回一个如下格式的FCI:</p>
+
+<blockquote>
+  <p>6F{84 A5{88 5F2D 9F11 BF0C}}<br />
+6F为FCI模板的tag，包含84和A5，A5包含88、5F2D、9F11、BF0C。</p>
+</blockquote>
+
+<p>其中88表示目录文件的SFI，SFI对应的文件就存储着AID，终端发送表明短文件标识和记录号的读记录指令就可以获取到这些AID。</p>
+
+<p>e.g.</p>
+<blockquote>
+  <p>-&gt; 00A4 0400 0E 315041592E5359532E4444463031<br />
+&lt;- 6F24840E315041592E5359532E4444463031A5128801015F2D087A68656E667264659F1101019000<br />
+-&gt; 00B2 010C 00<br />
+&lt;- 702A61284F07A0000003330101500B50424F43204372656469749F120F4341524420494D41474520303033359000<br />
+-&gt; 00B2 020C 00<br />
+&lt;- 702A61284F07A0000003330102500B50424F43204372656469749F120F4341524420494D41474520303033359000<br />
+-&gt; 00B2 030C 00 <br />
+&lt;- 6A83</p>
+</blockquote>
+
+<p>上例所示返回的88，其长度为01，值为01，代表着SFI为01的文件存储着AID，发送读记录指令后获取到了值为“A0000003330101”和“A0000003330102””的AID。</p>
+
+<h4 id="ppseproximity-payment-system-environment">PPSE(Proximity Payment System Environment)</h4>
+
+<p>近距离支付系统环境，文件名“2PAY.SYS.DDF01”，转换成ASCII是“325041592E5359532E4444463031”。</p>
+
+<p>qPBOC交易流程中的目录选择方式就是通过选择PPSE来获取AID列表，卡片接收到选择PPSE指令后会返回一个如下格式的FCI:</p>
+
+<blockquote>
+  <p>6F{84 A5{BF0C{ 61{4F 50 87}… }}}<br />
+6F为FCI模板的tag，包含84和A5，A5包含BF0C，BF0C包含61，61包含4F、50、87，其中BF0C可以包含多个61。</p>
+</blockquote>
+
+<p>其中61表示目录入口，4F表示AID，PPSE直接返回了AID，而不需要发送读记录指令，这也是qPBOC比借记贷记快的原因之一。</p>
+
+<p>e.g.</p>
+<blockquote>
+  <p>-&gt; 00A4 0400 0E 325041592E5359532E4444463031<br />
+&lt;- 6F30840E325041592E5359532E4444463031A51EBF0C1B61194F07A0000003330101500B50424F43204372656469748701019000</p>
+</blockquote>
+
+<p>上例所示获取到值为“A0000003330101”的AID。</p>
+
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

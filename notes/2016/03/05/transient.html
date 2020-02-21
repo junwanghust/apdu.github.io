@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>Transient Array | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/03/05/transient.html" title="Transient Array">Transient Array</a></h1>
+	<p class="entry-date">2016-03-05</p>
+	<p>在Applet开发中，我们经常会遇到这种需求：当校验PIN命令成功后，我们可以获得文件的读权限，当复位或者重新选择应用后需要再次重新校验PIN才可以获取权限。</p>
+
+<p>可能你会这样做：定义一个变量a，校验PIN成功后给a赋值1，重新选择的时候给赋值为0，这种做法在PC编程中没有问题。</p>
+
+<p>在Java Card Applet开发中如果你把a定义在了E2P/Flash中也可以实现需求，但我们有更好的办法，那就是使用Transient Array，其对象的头是存放在E2P/Flash中的，
+而对象体（数值）却是存放在RAM中的。RAM的读写速度要比E2P/Flash快很多。</p>
+
+<p>Java Card API在JCSystem类中提供了makeTransientByteArray、makeTransientShortArray、makeTransientObjectArray、makeTransientBooleanArray四个临时数组创建的API，
+其参数均有两个：length与event，length代表了创建临时数组的大小，event代表在哪种情况下数组元素会被清空；event可取的值有CLEAR_ON_RESET、CLEAR_ON_DESELECT，
+当event为前者时只有在复位时临时数组的值才会被清空，当event为后者时执行选择指令或复位时会情况数值。</p>
+
+<p>举个例子：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>private byte [] data1 ;  
+private byte [] data2 ;  
+//data1为4字节的临时数组，其初始值为0   
+data1 = JCSystem.makeTransientByteArray((short)4, JCSystem.CLEAR_ON_DESELECT);  
+//data2为4字节的临时数组，其初始值为0  
+data2 = JCSystem.makeTransientByteArray((short)4, JCSystem.CLEAR_ON_RESET);  
+data1[1] = 1;  
+data2[1] = 2;
+</code></pre></div></div>
+<p>当我们执行选择命令时data1数组的值变为全零，而data2[1]为2，其余为零；当执行复位时data1、data2数组的值全为零。</p>
+
+<p>Transient Array数组值既保证了速度，又降低了开发者的繁琐赋值。</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

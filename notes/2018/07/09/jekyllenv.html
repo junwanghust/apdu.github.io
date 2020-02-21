@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>GitHub Pages & Jekyll 本地环境搭建 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2018/07/09/jekyllenv.html" title="GitHub Pages & Jekyll 本地环境搭建">GitHub Pages & Jekyll 本地环境搭建</a></h1>
+	<p class="entry-date">2018-07-09</p>
+	<p>GitHub Pages深度集成了Jekyll，你可以轻而易举地在GitHub上免费发布网站，但在更新网站前你并不能实时预览GitHub Pages，
+需要通过Commit指令来提交修改内容，等服务器编译后再发布，如果文章格式较为复杂的话，你可能需要反复修改、提交，这样效率挺低的。</p>
+
+<p>幸运的是可以在本地搭建Jekyll环境来调试，避免一篇文章多次Commit的情况。</p>
+
+<p>以下为Windows系统下的搭建步骤：</p>
+
+<h5 id="1-ruby安装">1. Ruby安装</h5>
+
+<p>建议直接下载Ruby with Devkit的版本，不用再单独安装Devkit和MSYS2 development toolchain, <a href="https://rubyinstaller.org/downloads/">RubyInstaller下载</a> 。</p>
+
+<p>安装路径建议为纯英文路径并且不带空格。</p>
+
+<p>安装时“MSYS2 development toolchain”要勾选。</p>
+
+<p>安装时“Run ridk install…”不建议勾选，默认源下载速度太慢，且toolchain前面已经安装，如果一定要执行的话参考如下：</p>
+
+<p>修改msys2安装目录（通常位于Ruby安装目录下，例如：C:/Ruby25-x64/msys64）以下文件，将默认安装源改为清华大学开源服务器:</p>
+
+<p>/etc/pacman.d/mirrorlist.mingw32 ，在文件开头添加：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Server = http://mirrors.ustc.edu.cn/msys2/mingw/i686
+</code></pre></div></div>
+
+<p>/etc/pacman.d/mirrorlist.mingw64 ，在文件开头添加：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Server = http://mirrors.ustc.edu.cn/msys2/mingw/x86_64
+</code></pre></div></div>
+
+<p>/etc/pacman.d/mirrorlist.msys ，在文件开头添加：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Server = http://mirrors.ustc.edu.cn/msys2/msys/$arch
+</code></pre></div></div>
+
+<p>命令行执行：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ridk install
+</code></pre></div></div>
+<p>选择“3 - MSYS2 and MINGW development toolchain”安装更新即可。</p>
+
+<p>安装完成后在命令行输入 ruby -v 命令验证安装。</p>
+
+<h5 id="2-jekyll及bundle安装">2. Jekyll及bundle安装</h5>
+
+<p>如果觉得国外服务器太慢的话，可以执行如下命令来替换安装源：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
+</code></pre></div></div>
+
+<p>命令行执行：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install jekyll bundle
+</code></pre></div></div>
+
+<h5 id="3-github-pages本地配置">3. GitHub Pages本地配置</h5>
+
+<p>将GitHub Pages的repository下载到本地目录，假设为“D:/apdu.github.io”，在“apdu.github.io”目录下创建一个Gemfile文件（没有后缀），文件内容如下:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>source 'https://gems.ruby-china.com/'
+gem 'github-pages', group: :jekyll_plugins
+</code></pre></div></div>
+<p>注意:官方源“https://rubygems.org/”速度太慢了，故改成了Ruby China的安装源。</p>
+
+<p>再通过命令行切换到“apdu.github.io”目录执行 bundle install 命令。</p>
+
+<p>最后在“apdu.github.io”目录下创建一个build.bat文件，文件内容如下:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle exec jekyll serve
+pause
+</code></pre></div></div>
+
+<p>点击“build.bat”即可编译生成网站，浏览器访问 <a href="http://localhost:4000/">http://localhost:4000/</a> 即可，只要不关闭命令行，本地工程有改动都会自动编译。</p>
+
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

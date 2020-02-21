@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>Linux笔记：文件与目录 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2019/01/16/linuxnote05.html" title="Linux笔记：文件与目录">Linux笔记：文件与目录</a></h1>
+	<p class="entry-date">2019-01-16</p>
+	<h3 id="1-文件与目录的命名">1. 文件与目录的命名</h3>
+
+<p>Linux系统通过目录管理文件，文件系统组织成树状结构，目录中含有多个文件，也可以含有子目录，
+Linux系统路径分隔符使用正斜线/，而Windows则使用反斜线\。</p>
+
+<p>名字长度一般允许1-255个字符，除ASCII码为0和47外的所有字符都是命名的合法字符，空格、星号甚至不可打印字符也可以作为文件名，
+/被用于路径分隔符，故不可用于文件名，一个字节的取值在0-255之间，47是/的ASCII码，不可作为文件名，ASCII码0代表null(文件结尾)也不可作为文件名，
+其余254种取值都可作为文件名。</p>
+
+<p>注意：Linux中大小写是严格区别的，尽量避免特殊字符的文件名，尽量避免通过大小写来区分文件。</p>
+
+<h3 id="2-文件比对">2. 文件比对</h3>
+
+<h5 id="21-cmp命令比对">2.1 cmp命令比对</h5>
+
+<p>用法:</p>
+<blockquote>
+  <p>cmp file1 file2</p>
+</blockquote>
+
+<p>逐字节比较两个文件是否相同，如果相同则不给出任何提示，不同时则打印第一个不同之处。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ cmp test.txt testpy.py
+test.txt testpy.py differ: byte 1, line 1
+</code></pre></div></div>
+
+<h5 id="22-散列算法命令比对">2.2 散列算法命令比对</h5>
+
+<p>如果要比对的文件处在不同的网络中，cmp就没法比较了，用散列算法更简单。</p>
+
+<p>常用的散列算法有md5、sha1，散列算法根据文件内容生成一个hash值，通过比对hash值就可判断文件是否相同。</p>
+
+<p>散列算法命令：</p>
+<blockquote>
+  <p>md5sum、sha1sum、sha224sum、sha256sum、sha384sum、sha512sum</p>
+</blockquote>
+
+<p>-c 选项为从文件中读取sum值并比较，可以使用重定向命令将sum值保存到文件中，方便以后比对。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ sha1sum test.py test.txt test.log
+28b746e2de550a8cb0711c92f0a001ef1796e430  test.py
+24d3923df62bd15a2cf6401bde96ea54eab751e0  test.txt
+9dc7186bebf0557a46a04063f9fd3f0376abca71  test.log
+
+zm@acer:~$ sha1sum test.py test.txt test.log  &gt; file.sha1sum
+zm@acer:~$ sha1sum -c file.sha1sum
+test.py: OK
+test.txt: OK
+test.log: OK
+</code></pre></div></div>
+
+<p>通过散列算法比较并不能100%保证一致性，md5失误率：<script type="math/tex">2^{-128} = 3.4*10^{-38}</script>，sha1失误率：$2^{-160} = 4.7*10^{-50}$。</p>
+
+<h5 id="23-diff命令比对">2.3 diff命令比对</h5>
+
+<p>diff命令除了比较文件是否一致外还可以列出两个文件的差别。</p>
+
+<p>用法:</p>
+<blockquote>
+  <p>diff file1 file2</p>
+</blockquote>
+
+<p>–normal选项为默认选项，输出两个文件的不同之处；<br />
+-u 选项输出不同处外还可以额外显示指定的行数，默认为3行，额外显示的内容为相同部分，著名的git就使用了diff -u。</p>
+
+<p>normal格式：列出一个如何将file1转化为file2的指令，这些指令有a（Add），c（Change）和d（Delete），
+指令字母左边的行号是file1的行号，右面是file2的行号；列出内容时，大于号后边的内容是需要在file1文件中增加的内容；小于号后边的内容是需从file1中删除的内容</p>
+
+<p>unified格式：列出一个如何将file1转化为file2的指令，-代表删除，+代表添加。</p>
+
+<p>normal格式举例：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//file1第25行更换(change)成file2的第25~26行
+25c25,26
+&lt; #define MAX_WEIGHT 2000000000
+&gt; /* max signed 32-bit integer */ 
+&gt; #define MAX_WEIGHT 0x7fffffff
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//file1第6l~62行删除(delete)后，后面内容与file2的第60行之后一致
+61,62d60
+&lt; x2 = ht[j].weight; 
+&lt; m2 = j;
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//file1的第68行增加(add)file2中的第67~68行
+68a67,68
+&gt; ht[i].parent = -1; 
+&gt; printf("Create new tree\n");
+</code></pre></div></div>
+
+<p>unified格式举例：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//file1第36行开始删除3行，并新加file2中36行
+@@ -36,3 +36 @@
+-       //char subdmid[4] = {0x10,6,3,0x33};
+-       //char subdmid[4] = {8,6,4,0x33};
+-       //char subdmid[4] = {0x70,3,6,0x33};
++       char subdmid[4] = {0x10,6,3,0x33};
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//从第33行开始删除11行，从file2中33行开始新加9行
+//行前面无-or+代表相同行(注意空行)
+@@ -33,11 +33,9 @@
+
+
+        //char subdmid[4] = {0};
+-       //char subdmid[4] = {0x10,6,3,0x33};
+-       //char subdmid[4] = {8,6,4,0x33};
+-       //char subdmid[4] = {0x70,3,6,0x33};
++       char subdmid[4] = {0x10,6,3,0x33};
+        //char subdmid[4] = {0x70,4,2,0x33};
+-       char subdmid[4] = {0x40,3,4,0x33};
++       //char subdmid[4] = {0x40,3,4,0x33};
+        //char subdmid[4] = {0xe0,5,3,0x33};
+        //char subdmid[4] = {0x60,2,3,0x33};
+        //char subdmid[4] = {0x20,1,6,0x33};
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ diff cpk1.cpp cpk2.cpp
+36,38c36
+&lt;       //char subdmid[4] = {0x10,6,3,0x33};
+&lt;       //char subdmid[4] = {8,6,4,0x33};
+&lt;       //char subdmid[4] = {0x70,3,6,0x33};
+---
+&gt;       char subdmid[4] = {0x10,6,3,0x33};
+40c38
+&lt;       char subdmid[4] = {0x40,3,4,0x33};
+---
+&gt;       //char subdmid[4] = {0x40,3,4,0x33};
+50,52c48,50
+&lt;       char domain_name[] = "TRANSC-TEST";
+&lt;       //char id[128] = {"000000000035"};
+&lt;       char id[128] = {"8810100000000002810F000000001800109"};
+---
+&gt;       char domain_name[] = "transc-test";
+&gt;       char id[128] = {"000000000035"};
+&gt;       //char id[128] = {"8810100000000002810F000000001800109"};
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ diff -u0 cpk1.cpp cpk2.cpp
+--- cpk1.cpp    2017-07-27 14:42:58.000000000 +0800
++++ cpk2.cpp    2019-01-13 23:21:50.296206000 +0800
+@@ -36,3 +36 @@
+-       //char subdmid[4] = {0x10,6,3,0x33};
+-       //char subdmid[4] = {8,6,4,0x33};
+-       //char subdmid[4] = {0x70,3,6,0x33};
++       char subdmid[4] = {0x10,6,3,0x33};
+@@ -40 +38 @@
+-       char subdmid[4] = {0x40,3,4,0x33};
++       //char subdmid[4] = {0x40,3,4,0x33};
+@@ -50,3 +48,3 @@
+-       char domain_name[] = "TRANSC-TEST";
+-       //char id[128] = {"000000000035"};
+-       char id[128] = {"8810100000000002810F000000001800109"};
++       char domain_name[] = "transc-test";
++       char id[128] = {"000000000035"};
++       //char id[128] = {"8810100000000002810F000000001800109"};
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zm@acer:~$ diff -u cpk1.cpp cpk2.cpp
+--- cpk1.cpp    2017-07-27 14:42:58.000000000 +0800
++++ cpk2.cpp    2019-01-13 23:21:50.296206000 +0800
+@@ -33,11 +33,9 @@
+
+
+        //char subdmid[4] = {0};
+-       //char subdmid[4] = {0x10,6,3,0x33};
+-       //char subdmid[4] = {8,6,4,0x33};
+-       //char subdmid[4] = {0x70,3,6,0x33};
++       char subdmid[4] = {0x10,6,3,0x33};
+        //char subdmid[4] = {0x70,4,2,0x33};
+-       char subdmid[4] = {0x40,3,4,0x33};
++       //char subdmid[4] = {0x40,3,4,0x33};
+        //char subdmid[4] = {0xe0,5,3,0x33};
+        //char subdmid[4] = {0x60,2,3,0x33};
+        //char subdmid[4] = {0x20,1,6,0x33};
+@@ -47,9 +45,9 @@
+
+        char se_path[] = "8810100000000002810F000000001800109.pack";
+        //char domain_name[] = "TRANSC-TEST";
+-       char domain_name[] = "TRANSC-TEST";
+-       //char id[128] = {"000000000035"};
+-       char id[128] = {"8810100000000002810F000000001800109"};
++       char domain_name[] = "transc-test";
++       char id[128] = {"000000000035"};
++       //char id[128] = {"8810100000000002810F000000001800109"};
+
+        uint32_t id_size = strlen(id);
+
+zm@acer:~$
+</code></pre></div></div>
+
+<h3 id="3-目录">3. 目录</h3>
+
+<h5 id="31-etc">3.1 /etc</h5>
+
+<p>供系统维护管理用的命令和配置文件，文件格式为文本文件，功能类似Windows的注册表信息。
+有passwd，hosts文件，*.conf文件，ssh、xinet.d、apt,network等配置信息，系统启动阶段系统初始化和启动各服务的脚本rc*.d，shell的偏好设置
+以及自定义的需要自启动的服务脚本rc.local。</p>
+
+<h5 id="32-tmp">3.2 /tmp</h5>
+
+<p>可以存放临时文件，每个用户都可以在此目录下创建文件，但只能删除自己的文件，无法删除其它用户的文件。</p>
+
+<h5 id="33-var">3.3 /var</h5>
+
+<p>包括系统运行时需要改变的数据、日志等，其中日志位于/var/log目录下。</p>
+
+<h5 id="34-bin">3.4 /bin</h5>
+
+<p>bin为binary的简写，主要存放一些基本的命令，如ls、ln、cp、cat等。</p>
+
+<h5 id="35-usrbin">3.5 /usr/bin</h5>
+
+<p>存放一些常用软件命令，如ssh、ftp、make、gcc、git等。</p>
+
+<h5 id="36-sbin-usrsbin">3.6 /sbin, /usr/sbin</h5>
+
+<p>存放一些需要root权限的命令。</p>
+
+<h5 id="37-dev">3.7 /dev</h5>
+
+<p>在Linux中设备都是以文件形式出现，这里的设备可以是硬盘，键盘，鼠标，网卡，终端，等设备，通过访问这些文件可以访问到相应的设备。</p>
+
+<h5 id="38-usrinclude">3.8 /usr/include</h5>
+
+<p>c语言头文件存放目录。</p>
+
+<h5 id="39-lib-usrlib">3.9 /lib, /usr/lib</h5>
+
+<p>存放各种C语言的链接库文件：</p>
+<ol>
+  <li>静态链接库文件.a后缀(archive，存档)</li>
+  <li>动态链接库文件.so后缀(shared objects：共享的目标代码，多个.o文件的集成)</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gcc test.c          //动态库编译
+gcc -static test.c  //静态库编译
+</code></pre></div></div>
+
+<p>另外可以使用ldd命令，查看依赖的动态库。</p>
+
+<h5 id="310-mnt-media">3.10 /mnt, /media</h5>
+
+<p>可以使用mount命令挂载U盘等，/media目录可以自动挂载。</p>
+
+<h5 id="311-home-root">3.11 /home, /root</h5>
+
+<p>/root为root用户的主目录，/home目录为用户主目录的父级目录，即zm的主目录为/home/zm。</p>
+
+<h3 id="4-文件通配符规则">4. 文件通配符规则</h3>
+
+<p>Linux的文件通配符是由shell程序解释的，而不是命令本身，不同shell的通配符可能会有不同。</p>
+
+<p>需要注意文件名通配符规则与正则表达式的规则不同。</p>
+
+<h5 id="41-显示匹配">4.1 显示匹配</h5>
+
+<ol>
+  <li>点字符(.)，作为文件名或路径名分量的第一个字符时，必须显式匹配；</li>
+  <li>斜线(/)，作为路径分隔符必须显式匹配。</li>
+</ol>
+
+<h5 id="42-常用通配符">4.2 常用通配符</h5>
+
+<ol>
+  <li>星号(*)可以匹配任意长度的字符，显示匹配除外；</li>
+  <li>问号(?)匹配单一字符；</li>
+  <li>方括号[]匹配括号内任一字符，也可以用减号指定一个范围。例: [A-Z]*、[Mm]akefile；</li>
+  <li>波浪线(~)当前用户的主目录(home)，~zm代表用户zm的主目录；</li>
+  <li>匹配子目录中的文件可以使用类似*/*。</li>
+</ol>
+
+<p>例如*/*.[ch]匹配子目录中所有.c及.h文件；try*c可以匹配try.c、try1c、try2.c；*c可以匹配basic，但不匹配.c。</p>
+
+<h5 id="43-点文件与点点文件">4.3 点文件与点点文件</h5>
+
+<p>点(.)文件代表当前目录，点点文件(..)代表上级目录，.与..文件不是由通配符处理来负责解释的，而是来源于目录的存储结构。</p>
+
+<p>例如，编译某个c文件夹生成a.out，命令行输入./a.out即可执行当前目录下的a.out。</p>
+
+<p>在使用通配符前使用set -x命令可以显示通配符匹配的文件。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//cpk.c文件内容为1234567890
+//test.c文件打印一个Hello World!
+
+zm@acer:~$ set -x 
+zm@acer:~$ cat *.c
++ cat ./cpk.c ./test.c
+1234567890
+
+#include&lt;stdio.h&gt;
+
+int main() {
+    printf("Hello World!");
+    return 0;
+}
+</code></pre></div></div>
+
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>C#笔记：标识符、基本数据类型与操作符 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2019/05/17/csharpnote01.html" title="C#笔记：标识符、基本数据类型与操作符">C#笔记：标识符、基本数据类型与操作符</a></h1>
+	<p class="entry-date">2019-05-17</p>
+	<h3 id="1-标识符">1 标识符</h3>
+
+<h4 id="11-标识符">1.1 标识符</h4>
+
+<p>标识符是程序中对各个元素进行标识的名称，这些元素可以包括命名空间、类、方法和变量。</p>
+
+<p>C#中标识符需要遵循以下规则:</p>
+<ul>
+  <li>只能使用字母(区分大小写)、数字和下划线</li>
+  <li>标识符只能以字母或者下划线开头</li>
+</ul>
+
+<h4 id="12-关键字">1.2 关键字</h4>
+
+<p>关键字是预定义的保留标识符，对编译器有特殊意义，程序员不可重用这些标识符，下面列出了这些标识符。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>abstract</th>
+      <th>as</th>
+      <th>base</th>
+      <th>bool</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>break</td>
+      <td>byte</td>
+      <td>case</td>
+      <td>catch</td>
+    </tr>
+    <tr>
+      <td>char</td>
+      <td>checked</td>
+      <td>class</td>
+      <td>const</td>
+    </tr>
+    <tr>
+      <td>continue</td>
+      <td>decimal</td>
+      <td>default</td>
+      <td>delegate</td>
+    </tr>
+    <tr>
+      <td>do</td>
+      <td>double</td>
+      <td>else</td>
+      <td>enum</td>
+    </tr>
+    <tr>
+      <td>event</td>
+      <td>explicit</td>
+      <td>extern</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>finally</td>
+      <td>fixed</td>
+      <td>float</td>
+      <td>for</td>
+    </tr>
+    <tr>
+      <td>foreach</td>
+      <td>goto</td>
+      <td>if</td>
+      <td>implicit</td>
+    </tr>
+    <tr>
+      <td>in</td>
+      <td>int</td>
+      <td>interface</td>
+      <td>internal</td>
+    </tr>
+    <tr>
+      <td>is</td>
+      <td>lock</td>
+      <td>long</td>
+      <td>namespace</td>
+    </tr>
+    <tr>
+      <td>new</td>
+      <td>null</td>
+      <td>object</td>
+      <td>operator</td>
+    </tr>
+    <tr>
+      <td>out</td>
+      <td>override</td>
+      <td>params</td>
+      <td>private</td>
+    </tr>
+    <tr>
+      <td>protected</td>
+      <td>public</td>
+      <td>readonly</td>
+      <td>ref</td>
+    </tr>
+    <tr>
+      <td>return</td>
+      <td>sbyte</td>
+      <td>sealed</td>
+      <td>short</td>
+    </tr>
+    <tr>
+      <td>sizeof</td>
+      <td>stackalloc</td>
+      <td>static</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>struct</td>
+      <td>switch</td>
+      <td>this</td>
+      <td>throw</td>
+    </tr>
+    <tr>
+      <td>true</td>
+      <td>try</td>
+      <td>typeof</td>
+      <td>uint</td>
+    </tr>
+    <tr>
+      <td>ulong</td>
+      <td>unchecked</td>
+      <td>unsafe</td>
+      <td>ushort</td>
+    </tr>
+    <tr>
+      <td>using</td>
+      <td>using static</td>
+      <td>virtual</td>
+      <td>void</td>
+    </tr>
+    <tr>
+      <td>volatile</td>
+      <td>while</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>上下文关键字仅在一部分程序上下文中有特殊含义，可以在相应上下文范围之外用作标识符。 
+一般来说，C#语言中新增的关键字会作为上下文关键字添加，以免破坏用旧版语言编写的程序。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>add</th>
+      <th>alias</th>
+      <th>ascending</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>async</td>
+      <td>await</td>
+      <td>by</td>
+    </tr>
+    <tr>
+      <td>descending</td>
+      <td>dynamic</td>
+      <td>equals</td>
+    </tr>
+    <tr>
+      <td>from</td>
+      <td>get</td>
+      <td>global</td>
+    </tr>
+    <tr>
+      <td>group</td>
+      <td>into</td>
+      <td>join</td>
+    </tr>
+    <tr>
+      <td>let</td>
+      <td>nameof</td>
+      <td>on</td>
+    </tr>
+    <tr>
+      <td>orderby</td>
+      <td>partial(类型)</td>
+      <td>partial(方法)</td>
+    </tr>
+    <tr>
+      <td>remove</td>
+      <td>select</td>
+      <td>set</td>
+    </tr>
+    <tr>
+      <td>value</td>
+      <td>var</td>
+      <td>when(筛选条件)</td>
+    </tr>
+    <tr>
+      <td>where(泛型类型约束)</td>
+      <td>where(查询子句)</td>
+      <td>yield</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>关键字的具体使用可参考<a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/">微软帮助文档</a></p>
+
+<h3 id="2-变量">2 变量</h3>
+
+<p>变量是容纳值的存储位置，可以将变量想象成容纳信息的容器，使用该变量就可以获取其对应的值。</p>
+
+<h4 id="21-命名变量">2.1 命名变量</h4>
+
+<p>通过恰当的命名规范可以来避免混淆、减少bug等，下面是一些常规建议:</p>
+<ul>
+  <li>不要以下划线开头，虽然在C#中合法，但限制了和其它语言(例如Visual Basic)的互操作性</li>
+  <li>不要创建仅大小写不同的标识符，例如MyVar与myVar在使用时容易混淆，而且Visual Baisc不区分大小写，重用性也会受限</li>
+  <li>名称以小写字母开头</li>
+  <li>在包含多个单词的标识符中，从第二个单词起，每个单词首字母大写(也就是驼峰命名法)，例如footballTeam</li>
+</ul>
+
+<h4 id="22-声明变量">2.2 声明变量</h4>
+
+<p>声明变量时需要指定变量的类型，例如:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int age;
+</code></pre></div></div>
+<p>变量声明时其值为随机值，除非变量被明确赋值，在C/C++未赋值就使用变量可能引起bug，但在C#中不允许使用未赋值的变量，变量只有在赋值后才可使用。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int age;
+Console.WriteLine(age); //编译时报错
+</code></pre></div></div>
+
+<h4 id="23-隐式声明变量">2.3 隐式声明变量</h4>
+
+<p>C#编译器可以根据表达式来推断变量类型，使用var关键字来代替类型即可触发此操作，称之为隐式声明变量。</p>
+
+<p>使用var时需要在声明变量时就要确定变量的类型，类型确定下来后不可更改。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var myVar = 1; //myVar为int
+var myDouble = 1.0; //myDouble为double
+
+var myTest; //错误
+myVar = "str"; //错误
+</code></pre></div></div>
+
+<p>注意:int var = 1;也是合法的，此处的var不再是上下文关键字。</p>
+
+<h3 id="3-基本数据类型">3 基本数据类型</h3>
+
+<p>C#内置了许多基本数据类型(Primitive Data Type)，例如整型、浮点、bool、字符串等。</p>
+
+<h4 id="31-整型">3.1 整型</h4>
+
+<ul>
+  <li>sbyte类型表示有符号 8 位整数的值介于-128 到 127 之间。</li>
+  <li>byte类型表示其值介于 0 和 255 之间的 8 位无符号的整数。</li>
+  <li>short类型表示有符号 16 位整数值介于-32768 和 32767 之间。</li>
+  <li>ushort类型表示无符号的 16 位整数，其值介于 0 和 65535 之间。</li>
+  <li>int类型表示有符号 32 位整数值介于-2147483648 到 2147483647 之间($-2^{31} \sim 2^{31}-1$)。</li>
+  <li>uint类型表示值介于 0 到 4294967295 之间的 32 位无符号的整数。</li>
+  <li>long类型表示有符号 64 位整数的值介于-9223372036854775808 到 9223372036854775807 之间($-2^{63} \sim 2^{63}-1$)。</li>
+  <li>ulong类型表示值介于 0 到 18446744073709551615 之间的 64 位无符号的整数。</li>
+  <li>char类型表示无符号的 16 位整数，其值介于 0 和 65535 之间。</li>
+</ul>
+
+<h4 id="32-浮点类型">3.2 浮点类型</h4>
+
+<p>C#支持两个浮点类型:float和double。 float为32位单精度,double为64位双精度。</p>
+
+<p>float类型取值范围从大约$1.5 \times 10^{-45}$到$3.4 \times 10^{38}$且精度为7位数字。</p>
+
+<p>double类型取值范围从大约$5.0 \times 10^{-324}$到$1.7 \times 10^{308}$且精度为15到16位。</p>
+
+<h4 id="33-十进制类型">3.3 十进制类型</h4>
+
+<p>decimal类型是适用于财务和货币计算的128位数据类型。 decimal类型可以表示值介于$1.0 \times 10^{-28}$到大约$7.9 \times {10^28}$具有28-29个有效数字。</p>
+
+<h4 id="34-bool-类型">3.4 Bool 类型</h4>
+
+<p>bool类型取值为true或false。</p>
+
+<h4 id="35-字符串类型">3.5 字符串类型</h4>
+
+<p>表示字符串。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int num=10;
+long numl=10L;
+float numf=10F;
+double numd=10.1;
+decimal numdec=10M;
+char numc='m';
+string str = "mmnn";
+</code></pre></div></div>
+
+<h4 id="36-nan与infinity">3.6 NaN与Infinity</h4>
+
+<p>C#中任何数除以0所得的结果是无穷大，无穷大不在int、long、decimal范围内，故5/0会报错。
+但是double和float实际上有一个可以表示无穷大的特殊值(Infinity)，即5.0/0为Infinity。</p>
+
+<p>0除以任何数其结果为0(被除数为0除外)，如果0.0/0则结果为NaN(Not a Number),代表无效的浮点运算。</p>
+
+<p>NaN和Infinity可以在表达式中使用，10+NaN结果为NaN，10+Infinity结果为Infinity，0*Infinity结果为NaN，NaN*0结果为NaN。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Console.WriteLine(0 / 0);   //编译出错
+Console.WriteLine(0.0/0);   //NaN
+Console.WriteLine(0.0 / 0 + 10); //NaN
+Console.WriteLine(0.0 / 0 * 0);  //NaN
+
+Console.WriteLine(5.0/0);   //Infinity
+Console.WriteLine(5.0 / 0 + 10); //Infinity
+Console.WriteLine(5.0 / 0 * 0);  //NaN 
+</code></pre></div></div>
+
+<h3 id="4-操作符">4 操作符</h3>
+
+<p>接受一个操作数的运算符称为一元操作符，例如递增操作符(++)。 接受两个操作数的运算符称为二元操作符，例如算术运算符（*、/、+、- ）。 条件运算符?:接受三个操作数，是 C#中唯一的三元运算符。</p>
+
+<h4 id="41-算术操作符">4.1 算术操作符</h4>
+<p>C#支持 +、-、*、/运算，分别代表加、减、乘、除，除此之外还支持%运算符，即取模(余数)运算。</p>
+
+<p>不是所有操作数都适用于任何数据类型，不同数据类型支持的操作符可能不同。</p>
+
+<ul>
+  <li>char、int、long、float、double、decimal等整型都支持任何算术操作符</li>
+  <li>string仅支持+算术操作符</li>
+  <li>bool类型不支持任何算数操作符</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>char b = '9';
+char c = '2';
+Console.WriteLine(b + c);   //107
+Console.WriteLine(b % c);   //7
+Console.WriteLine(9 % 4);   //1
+Console.WriteLine(9 / 4);   //2
+Console.WriteLine(9.0 / 4); //2.25
+Console.WriteLine(6.2 % 4); //2.2
+Console.WriteLine(6.2 + 4); //10.2
+</code></pre></div></div>
+
+<p>注意：C/C++中不允许对浮点类型进行取模运算，但C#允许。</p>
+
+<p>C#中乘法类的操作符(* / %)优先级高于加法类操作符(+ -)，但可用圆括号来覆盖优先级。</p>
+
+<h4 id="42-赋值操作符">4.2 赋值操作符</h4>
+
+<p>C#语言中的等号(=)称为赋值操作符，所有操作符都依据他们的操作数返回一个值，赋值操作符也不例外。</p>
+
+<p>赋值操作符取两个操作数：右侧操作数被求值，结果保存在左侧操作数中，赋值操作符的返回值就是赋给左操作数的值。</p>
+
+<blockquote>
+  <p>左操作数 = 右操作数，赋值的同时返回右操作数的值。</p>
+</blockquote>
+
+<p>赋值操作符的使用如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int var1;
+int var2;
+var1 = var2 = 1;          //将var2 = 1的返回值赋给var1
+Console.WriteLine(var2 = 2); //打印返回值2
+</code></pre></div></div>
+
+<h4 id="43-递增和递减操作符">4.3 递增和递减操作符</h4>
+
+<p>给某个变量加1或减1是非常常见的操作，C#专门为这个操作设计了一个操作符:++与–。</p>
+
+<p>++与–是一元操作符，即只有一个操作数。这两个操作符既可以放在变量的前面，也可以放在变量的后面。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int a = 1;
+Console.WriteLine(a++);  //1
+Console.WriteLine(a--);  //2
+Console.WriteLine(++a);  //2
+Console.WriteLine(--a);  //1
+</code></pre></div></div>
+
+<p>a++与++a的不同之处在于a++先返回a再加1，++a先加1再返回a，a–与–a同理。</p>
+
+<h4 id="44-关系操作符">4.4 关系操作符</h4>
+
+<p>关系操作符是二元操作符，判断一个值与另一个值的关系，其结果为bool类型：true或false。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作符</th>
+      <th>含义</th>
+      <th>示例</th>
+      <th>结果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>==</td>
+      <td>等于</td>
+      <td>100==20</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>!=</td>
+      <td>不等于</td>
+      <td>1！=2</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>&lt;</td>
+      <td>小于</td>
+      <td>5&lt;6</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>&gt;</td>
+      <td>大于</td>
+      <td>6&gt;5</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>&gt;=</td>
+      <td>小于或等于</td>
+      <td>5&lt;=5</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>&lt;=</td>
+      <td>大于或等于</td>
+      <td>6&gt;=7</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="45-逻辑操作符">4.5 逻辑操作符</h4>
+
+<p>C#有3个逻辑操作符：&amp;&amp;、||、！（逻辑与，逻辑或，逻辑非）。</p>
+
+<p>逻辑非的作用是将布尔值取反，例如a=false，则!a为true。</p>
+
+<p>逻辑与、逻辑或可以将两个或多个布尔表达式合并成一个布尔值。</p>
+
+<p>只有作为操作数的布尔表达式的值都为true时，&amp;&amp;操作符的结果才为true；操作数其中一个为true时||操作符的结果为true。</p>
+
+<p>&amp;&amp;与||操作符都支持短路求值。有时没有必要为两个操作数都求值，例如当&amp;&amp;的左操作数为false时，不管右操作数的值是什么，整个表达式结果肯定为false。</p>
+
+<h4 id="46-复合赋值操作符">4.6 复合赋值操作符</h4>
+
+<p>复合赋值操作符是在赋值操作符前加一个算术操作符，例如+=、-=、*=、/=、%=。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a += b; //等价a = a+b;
+a -= b; //等价a = a-b;
+a /= b; //等价a = a/b;
+a *= b; //等价a = a*b;
+a %= b; //等价a = a%b;
+</code></pre></div></div>
+
+<h4 id="47-结合性与优先级">4.7 结合性与优先级</h4>
+<p>当表达式中出现两个或两个以上具有相同优先级的运算符时，将根据结合性计算它们。 左结合操作符按从左到右的顺序计算，例如：x * y / z 将计算为 (x * y) / z。 右结合操作算符按从右到左的顺序计算，例如：赋值运算符。</p>
+
+<p>三元运算符?:是右结合运算符。 大多数的二元运算符是左结合运算符。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作符</th>
+      <th>描述</th>
+      <th>结合性</th>
+      <th>优先级</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>（）</td>
+      <td>覆盖优先级</td>
+      <td>左</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>++</td>
+      <td>后缀递增</td>
+      <td>左</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>--</td>
+      <td>后缀递减</td>
+      <td>左</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>!</td>
+      <td>逻辑取反</td>
+      <td>左</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>++</td>
+      <td>前缀递曾</td>
+      <td>左</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>--</td>
+      <td>前缀递减</td>
+      <td>左</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>乘</td>
+      <td>左</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>/</td>
+      <td>除</td>
+      <td>左</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>%</td>
+      <td>取余</td>
+      <td>左</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>+</td>
+      <td>加</td>
+      <td>左</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>-</td>
+      <td>减</td>
+      <td>左</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>&lt;</td>
+      <td>小于</td>
+      <td>左</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>&lt;=</td>
+      <td>小于等于</td>
+      <td>左</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>&gt;</td>
+      <td>大于</td>
+      <td>左</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>&gt;=</td>
+      <td>大于等于</td>
+      <td>左</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>==</td>
+      <td>等于</td>
+      <td>左</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>!=</td>
+      <td>不等于</td>
+      <td>左</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>&amp;&amp;</td>
+      <td>逻辑与</td>
+      <td>左</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>||</td>
+      <td>逻辑或</td>
+      <td>左</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>=</td>
+      <td>赋值</td>
+      <td>右</td>
+      <td>9</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注：优先级1最高,9最低。</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

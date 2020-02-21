@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>PBOC与UICS区别 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/08/02/pbocvsuics.html" title="PBOC与UICS区别">PBOC与UICS区别</a></h1>
+	<p class="entry-date">2016-08-02</p>
+	<p>PBOC规范是由中国人民银行制定的，而UICS则是由中国银联制定的，PBOC为政府主导的行业规范，UICS则是银联主导的企业规范。</p>
+
+<p>UICS规范分类更具体：基础规范、辅助规范、产品规范。</p>
+
+<p>PBOC规范更新时间大约3年左右，UICS则可快速更新。</p>
+
+<p>PBOC与UICS具体差异如下:</p>
+<ol>
+  <li>UICS支持联机交易ODA（Offline Data Authentication (ODA) for Online Authorizations）；</li>
+  <li>qUICS中GPO需要返回密文信息数据tag9F27；</li>
+  <li>qPBOC支持预付；</li>
+  <li>qPBOC联机交易或者拒绝时只能返回tag5F20，但qUICS则可返5F20 or 9F0B；</li>
+  <li>UICS非接小额扩展交易支持双货币，PBOC的非接小额扩展只支持单币交易；</li>
+  <li>UICS非接小额扩展9F10中增加了IDD=06的情况。</li>
+</ol>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

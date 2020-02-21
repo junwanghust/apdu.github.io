@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>PBOC4.0要来了 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/05/08/prepboc4.html" title="PBOC4.0要来了">PBOC4.0要来了</a></h1>
+	<p class="entry-date">2016-05-08</p>
+	<p>目前人行、银联等正在组织讨论PBOC4.0的规范。就目前了解到的信息来看，大致更新如下:</p>
+
+<h5 id="借记贷记">借记贷记</h5>
+<ol>
+  <li>对于BCTC测试案例中无规范依据的地方加入规范，例如对于持卡人姓名，持卡人姓名扩展，持卡人证件号等用户敏感信息建议写成非真实信息、应用锁定后应当返回FCI等。</li>
+</ol>
+
+<h5 id="qpboc">qPBOC</h5>
+<ol>
+  <li>删除预付；</li>
+  <li>删除小额或CTTA检查，删除小额和CTTA检查，只保留小额检查；</li>
+  <li>强化了联机交易内容；</li>
+  <li>引入新概念，应用主账号参考号，CDCVM等；</li>
+  <li>增加闪卡描述与处理。</li>
+</ol>
+
+<h5 id="线上有卡支付">线上有卡支付</h5>
+<ol>
+  <li>新增有卡支付规范，流程是借记贷记或qPBOC，对应着云借记贷记、云闪付。</li>
+</ol>
+
+<p>另外，规范提出了移动支付卡的概念，与普通金融IC卡略有区别；电子现金部分未删除。</p>
+
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

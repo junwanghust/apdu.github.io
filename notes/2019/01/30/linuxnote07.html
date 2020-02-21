@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>Linux笔记：目录遍历命令 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2019/01/30/linuxnote07.html" title="Linux笔记：目录遍历命令">Linux笔记：目录遍历命令</a></h1>
+	<p class="entry-date">2019-01-30</p>
+	<h3 id="1-find">1. find</h3>
+
+<p>find命令以递归的方式遍历一个目录，在指定范围内查找符合条件的文件或者目录，然后执行相应的动作。
+find命令功能很强，描述条件和动作的选项较多。</p>
+
+<p>例如：find verl.d ver2.d -name ‘*.c’ -print</p>
+
+<p>其查找范围为当前目录的子目录ver1.d 和ver2.d；条件为与名字*.c匹配，这里的*.c应当用引号括起，否则会被shell展开，
+find命令会自己匹配符合条件的文件或目录；动作为把查找到的文件的路径名打印出来。</p>
+
+<h5 id="11-关于条件的选项">1.1 关于条件的选项</h5>
+
+<p><strong>-name file</strong> 文件名的匹配，允许使用通配符[]、?、*，文件名应当用引号括起，file指路径名的最后一部分(最后一个\分割之后)。</p>
+
+<p><strong>-regex pattern</strong> 使用正则表达式匹配整个路径名。</p>
+
+<p><strong>-type</strong> 后面跟文件类型，f:普通文件、d:目录、l:符号连接文件、c:字符设备文件、b:块设备文件、p:管道文件。</p>
+
+<p><strong>-size</strong> 后面跟文件大小，+代表大于，无符号代表等于，-代表小于，单位有c(字符)、 b(块，512字节或1024字节，具体跟系统有关)、k、M、G，默认为b。
+例如：-size +100c代表大于100字节。</p>
+
+<p><strong>-mtime</strong> ±ndays，文件最近修改时间，单位为天。</p>
+
+<p><strong>复合条件</strong> 可以用–o、! 等表示或、非(若未指明或、非则代表与)，还可以用()表示更复杂的条件组合(括号为shell的特殊字符，需在括号前面加转义字符\或者用单引号括起括号)。</p>
+
+<p><strong>其它选项</strong> 指定i节点号-inum、指定文件主-user、指定用户组-group、指定link数-links、指定路径深度-depth、指定文件的访问权限-perm等。</p>
+
+<h5 id="12-关于动作的选项">1.2 关于动作的选项</h5>
+
+<p><strong>-print</strong> 打印查找的文件的路径名。</p>
+
+<p><strong>-exec</strong> 对查找到的目标执行某一命令，在-exec及随后的分号(分号也是shell的特殊字符)之间的内容作为一条命令，在这命令的命令参数中，{}代表遍历到的目标文件的路径名(花括号之间无空格)</p>
+
+<p><strong>-ok</strong> 与-exec类似，只是对查找到符合条件的目标执行一个命令前需要经过操作员确认。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find /src -name '*.[ch]' -print
+find /src -type d -print
+
+//从当前目录开始检索link数大于2的非目录文件
+find . ! -type d -links +2 -print
+
+//从根目录开始检索文件大于100M，并且文件名为core或后缀为.temp的文件
+find / -size +1000M \( -name core -o -name '*.temp' \) -print
+find / -size +1000M '(' -name core -o -name '*.temp' ')' -print
+
+find /lib /usr -name 'libc*.so' -exec ls -lh {} \;
+
+find ~ -size +100k \( -name core -o -name ‘*.tmp’ \) -ok rm {} \;
+
+//src目录中查找c文件中含有--help的行，并打印出文件名与行号
+find src -name \*.c -exec grep -n -- --help {} /dev/null \;
+
+find src -name \*.c -exec grep -n -- --help {} /dev/null \; -exec ls -lh {} \;
+</code></pre></div></div>
+
+<p>在Linux系统中空设备：/dev/null，是一个特殊的设备文件，它丢弃一切写入其中的数据，但报告写入操作成功，读取它则会立即得到一个EOF。</p>
+
+<p>当grep只指定一个文件时，不会打印出文件名，只有多个文件时才会打印文件名，这时我们可以用空设备文件。</p>
+
+<h3 id="2-xargs">2. xargs</h3>
+
+<p>xargs命令将标准输入构造为命令的命令行参数，如果标准输入的数据量很大，xargs指定的处理程序会启动多个进程运行，每个进程处理一批，会是几千个参数(命令行参数占满128K字节)，
+可以使用xargs的-n选项指定每批处理多少个。</p>
+
+<p>在第1部分的查找命令：find src -name *.c -exec grep -n – –help {} /dev/null \;</p>
+
+<p>借助find的“壳”功能去遍历目录，对遍历到的每个符合条件的文件执行grep命令，这种方式效率低，因为每个命中的对象都需要执行grep命令：创建一个进程，完成任务后进程消亡，然后再创建，再消亡……。</p>
+
+<p>虽然grep命令也提供了-r选项，可以递归地搜索子目录下的文件，例如：grep –nr – –help *.c 这样无法检索全部文件，因为那些子目录名字不能被*.c匹配(shell只展开了当前目录下的文件)。</p>
+
+<p>如果生成的文件名列表追加在下列命令后面就可以了：grep -n – –help filelist，这时候就可以借助xargs命令。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find src -name \*.c –print | xargs grep -n -- --help 
+</code></pre></div></div>
+<p>xargs命令把标准输入追加到它的参数列表后面，也就是上述grep…的后面，再作为一个命令来执行，这样利用find精确筛选，利用grep批量处理文件，提高效率。</p>
+
+<p>xargs除与find配合使用，也可以与其它命令组合使用。</p>
+
+<p>例如：解决shell文件名生成时，因为文件太多，缓冲区空间受限而文件名展开失败的问题：rm -f *.dat 文件名*.dat展开失败，可以使用下面的命令 ls | grep “.dat$” | xargs rm -f。</p>
+
+<p>例如：find命中目录名因删除目录导致目录遍历过程遇到麻烦 find . -name CVS –exec rm –rf {} \; 改为：find . -name CVS -print | xargs rm -rf 。</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

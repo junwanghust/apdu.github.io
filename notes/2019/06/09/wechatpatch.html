@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>微信防撤回 | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2019/06/09/wechatpatch.html" title="微信防撤回">微信防撤回</a></h1>
+	<p class="entry-date">2019-06-09</p>
+	<p>以下内容仅适用于PC 2.6.8版本。</p>
+
+<ol>
+  <li><a href="https://dldir1.qq.com/weixin/Windows/WeChat_C1012.exe">下载微信2.6.8版本</a></li>
+  <li>安装(记住安装目录，下一步会用到)</li>
+  <li>安装目录下，查找WeChatWin.dll，建议备份一下文件</li>
+  <li>使用UltraEdit(或其它十六进制编辑软件)打开WeChatWin.dll，搜索C6 45 F3 00 84 C0 75 04 C6 45 F3 01 F6 45 EC 01，将这一行C0后的75改为74，保存即可
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//修改前
+00256c80h: C6 45 F3 00 84 C0 75 04 C6 45 F3 01 F6 45 EC 01 ;
+//修改后
+00256c80h: C6 45 F3 00 84 C0 74 04 C6 45 F3 01 F6 45 EC 01 ;
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>文件SHA1值如下,可用<a href="https://github.com/APDU/SmartCardPlus">SmartCard Plus</a>计算</p>
+<ol>
+  <li>微信2.6.8版本SHA1: 798891C7A874CD82170BC33B366B86FD48D992B9</li>
+  <li>WeChatWin.dll修改前SHA1: D0A5517B1292A751501B00B4B1F0702DB2D9FC30</li>
+  <li>WeChatWin.dll修改后SHA1: 53E7B1525D49BF2C3250A8131FF0BA2510779B78</li>
+</ol>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>

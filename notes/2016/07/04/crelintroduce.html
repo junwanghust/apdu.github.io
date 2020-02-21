@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    * Author:         APDU
+    -->
+    
+  
+    <meta charset="utf-8" />
+    <title>CREL Application | Notes</title>
+    <meta name="author" content="ZM" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="Notes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" href="/css/default.css" type="text/css" />  
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />  
+    <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="/js/prettify/prettify.js"></script>
+		
+    <!--script src="/js/mermaid/mermaid.min.js"></script-->
+	<script src="https://cdn.bootcss.com/mermaid/8.0.0/mermaid.min.js"></script>	
+	<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ], 
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a', 'blockquote'] 
+      }
+    });
+	</script>
+	
+	<!--script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script-->
+	<script src="https://cdn.bootcss.com/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"  type="text/javascript"></script>
+	 
+</head>
+<body>
+       
+    <div class="index-content">
+    <div class="section">
+        <ul class="artical-cate">
+            <li style="text-align:left"><a href="/"><span>Home</span></a></li>
+            <li style="text-align:center"><a href="/category"><span>Index</span></a></li>
+            <li style="text-align:right"><a href="/about"><span>About</span></a></li>
+        </ul>
+	</div>
+	
+	
+</div>	
+
+<div id="content">
+	<h1 class="entry-title"><a href="/notes/2016/07/04/crelintroduce.html" title="CREL Application">CREL Application</a></h1>
+	<p class="entry-date">2016-07-04</p>
+	<p>PBOC规范要求所有非接触终端(MSD 和 qPBOC)应使用PPSE(2PAY.SYS.DDF01)目录选择方法。</p>
+
+<p>对于传统的银行IC卡来说只需要内置一个PPSE就可以了，在移动支付时代，一张IC卡上可能会有多家银行的PBOC应用，这就出现了一个问题，
+传统IC卡PPSE数据是个人化时写入的，并且不可改写，用户无法选择其中某家银行的PBOC应用来完成支付，而且各家银行的PPSE数据可能不一样，我们需要一个更加灵活的PPSE。</p>
+
+<p>CREL的引入就可以解决这个问题。</p>
+
+<h5 id="定义">定义</h5>
+
+<p>一个或多个应用的安装过程中都会涉及到CREL，当应用的注册表有更改后，OPEN都会通知CREL程序。</p>
+
+<h5 id="添加到crel列表中">添加到CREL列表中</h5>
+
+<p>INSTALL [for install], INSTALL [for install and make selectable], INSTALL [for registry update]指令，或者使用CRS API。</p>
+
+<h5 id="从crel列表中删除">从CREL列表中删除</h5>
+<p>INSTALL [for registry update]指令，或者使用CRS API。</p>
+
+<p>简单来说，我们用CREL实例化(INSTALL)一个PPSE之后，我们可以通过INSTALL指令或者CRS来控制某些应用加入到CREL列表(PPSE)中，
+对于PPSE FCI中的其它值可以通过INSTALL [for install], INSTALL [for install and make selectable]来传入，这样既可以满足用户选择某家银行的PBOC来支付，又能兼容POS机。</p>
+
+<p>Note：CRS即Contactless Registry Service负责向用户提供检索所有应用组和独立应用的列表，并激活，解除激活或者修改优先级别或者在非接触式界面修改临时的优先级(复位后优先级恢复)。</p>
+
+	
+	</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+
+
+
+
+
+
+</body>
+
+</html>
